@@ -1,118 +1,80 @@
-$page-background-color: #faf8f3;
-$background-color: #faf8f3;
+$page-background-color: #d3d3d3;
 $primary-color: #333333;
-$border-color: #999;
+$emerald: #046307;
+$dark-green: #046307;
+$gold: #FFD700;
+$button-color: #e8e4e4;
 
-$header-font:'Playfair Display', serif;
-$paragraph-font: 'Open Sans', sans-serif;
+$header-font: 'The Nautigal', cursive;
+$paragraph-font: 'Crimson Pro', serif;
 /* Using SCSS variables to store breakpoints */
 $breakpoint-tablet: 768px;
 $breakpoint-phone: 500px;
 
 h1 {
-    color: $primary-color;
+    color: $emerald;
     font-family: $header-font;
-}
-
-nav {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-}
-
-nav a {
-    color: $primary-color;
-    text-decoration: none;
-    margin: 0 1rem;
-    padding: .5rem;
-    font-weight: bold;
-    border: 1px solid $border-color;
-    border-radius: 10px;
-    box-shadow: 1px 1px 1px 1px $border-color;
-    background-color: white;
-    cursor: pointer;
-}
-
-nav h2 {
-    margin: 0 auto 0 0;
-    border: none;
-}
-
-
-header img {
-    object-fit: contain;
-    width: 100%;
-    max-height: 100%;
+    font-size: 4rem;
 }
 
 h2 {
-    color: $primary-color;
-    font-family: $header-font;
+    font-size: 2rem;
     margin-top: 0;
 }
 
 p {
-    color: $primary-color;
+    color: $emerald;
     font-size: 1.1rem;
     font-weight: bold;
 }
 
 body {
-    height: 100%;
-    width: 100%;
-    background-color: $page-background-color;
     margin: 0;
+    height: 100%;
+    color: $dark-green;
+    width: 100%;
+    background: rgb(211,211,211);
+    background: linear-gradient(180deg, $page-background-color, white 100%) fixed;
     font-family: $paragraph-font;
 }
 
+.center-content {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.page-container {
+    width: 100%;
+}
+
 .container {
-    margin: 4rem;
+    margin: 4rem auto;
+    width: 250px;
 }
 
-.card {
-    background-color: $background-color;
-    padding: 2rem;
-    border: 2px solid $border-color;
-    border-radius: 20px;
-    box-shadow: 5px 5px 3px 1px $border-color;
+
+
+
+.center-text {
+    text-align: center;
+}
+
+button {
     margin: 2rem 0;
+    padding: .5rem 1rem;
+    width: 80%;
+    color: $emerald;
+    border-color: $emerald;
+    border-radius: 1rem;
+    font-weight: bold;
+    background-color: $button-color;
 }
-
-.card-header {
-    border-bottom: 2px solid $border-color;
-    padding: 0 1rem;
-}
-
-.card-body {
-    padding: 0 1rem;
-}
-
 
 @media (max-width: $breakpoint-tablet) {
     .container {
-        margin: 2rem;
-    }
-
-    .card {
-        padding: 1rem;
-        border: 2px solid $border-color;
-        border-radius: 20px;
-        box-shadow: 5px 5px 3px 1px $border-color;
-        margin: 1rem 0;
-    }
-}
-
-@media (max-width: $breakpoint-phone) {
-    .card {
-        padding: 0;
-        border: 0 none;
-        border-radius: 0;
-        box-shadow: none;
-        margin: 2rem 0;
-    }
-
-    .hide-on-phone {
-        display: none;
+        margin: 2rem auto;
+        width: 250px;
     }
 
 }

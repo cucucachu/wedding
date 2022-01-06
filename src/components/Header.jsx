@@ -6,7 +6,10 @@ import '../app.scss';
 export const Header = () => {
 
     return (
-        <header>
-        </header>
+        <div className="container">
+            <header>
+                <h1 className="center-text">Zoe + Cody</h1>
+            </header>
+        </div>
     )
 }
