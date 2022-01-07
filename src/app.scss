@@ -11,6 +11,16 @@ $paragraph-font: 'Crimson Pro', serif;
 $breakpoint-tablet: 768px;
 $breakpoint-phone: 500px;
 
+body {
+    margin: 0;
+    height: 100%;
+    color: $dark-green;
+    width: 100%;
+    background: rgb(211,211,211);
+    background: linear-gradient(180deg, $page-background-color, white 100%) fixed;
+    font-family: $paragraph-font;
+}
+
 h1 {
     color: $emerald;
     font-family: $header-font;
@@ -28,20 +38,16 @@ p {
     font-weight: bold;
 }
 
-body {
-    margin: 0;
-    height: 100%;
-    color: $dark-green;
-    width: 100%;
-    background: rgb(211,211,211);
-    background: linear-gradient(180deg, $page-background-color, white 100%) fixed;
-    font-family: $paragraph-font;
-}
-
-.center-content {
-    display: block;
-    margin: 0 auto;
-    width: 100%;
+button {
+    margin: 2rem 0;
+    padding: .5rem 1rem;
+    width: 80%;
+    color: $emerald;
+    border-color: $emerald;
+    border-radius: 1rem;
+    font-weight: bold;
+    background-color: $button-color;
+    cursor: pointer;
 }
 
 .page-container {
@@ -53,22 +59,28 @@ body {
     width: 250px;
 }
 
+.nav {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+}
 
-
+.center-content {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+}
 
 .center-text {
     text-align: center;
 }
 
-button {
-    margin: 2rem 0;
-    padding: .5rem 1rem;
-    width: 80%;
-    color: $emerald;
-    border-color: $emerald;
-    border-radius: 1rem;
-    font-weight: bold;
-    background-color: $button-color;
+.button-link {
+    width: auto;
+    margin: 16px;
+    padding: 0;
+    border: none;
+    background-color: transparent;
 }
 
 @media (max-width: $breakpoint-tablet) {
