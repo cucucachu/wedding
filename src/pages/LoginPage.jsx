@@ -1,13 +1,15 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 
 import { signInWithEmailAndPassword  } from 'firebase/auth';
 import { auth } from '../firebase';
 
+import credentials from '../../login.json';
+
 export function LoginPage(props) {
     const { handleSuccessfulLogin } = props;
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState(credentials.email);
+    const [password, setPassword] = useState(credentials.password);
     const [error, setError] = useState('');
 
     const attemptLogin = async (e) => {
@@ -16,7 +18,6 @@ export function LoginPage(props) {
         try {
             const loginResponse = await signInWithEmailAndPassword(auth, email, password);
             setError('');
-            console.dir(loginResponse);
             handleSuccessfulLogin(loginResponse.user);
         }
         catch (error) {

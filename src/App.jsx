@@ -8,6 +8,7 @@ import { Header } from './components/Header';
 
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
+import { GuestListPage } from './pages/GuestListPage';
 
 const pages = ['HOME', 'LOGIN'];
 
@@ -21,7 +22,8 @@ const App = () => {
     }
 
     const handleSuccessfulLogin = (user) => {
-        setUser(user)
+        setUser(user);
+        setPage('GUESTLIST');
     }
 
     const handleClickLogout = () => {
@@ -40,6 +42,11 @@ const App = () => {
                 handleSuccessfulLogin={handleSuccessfulLogin}
             />;
             break;
+        case 'GUESTLIST':
+            currentPage = <GuestListPage/>;
+            break;
+        default:
+            currentPage = <HomePage/>;
     }
 
     return (
