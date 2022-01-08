@@ -13,9 +13,9 @@ $breakpoint-phone: 500px;
 
 body {
     margin: 0;
-    height: 100%;
+    height: 100vh;
     color: $dark-green;
-    width: 100%;
+    width: 100vw;
     background: rgb(211,211,211);
     background: linear-gradient(180deg, $page-background-color, white 100%) fixed;
     font-family: $paragraph-font;
@@ -41,7 +41,7 @@ p {
 button {
     margin: 2rem 0;
     padding: .5rem 1rem;
-    width: 80%;
+    width: 100%;
     color: $emerald;
     border-color: $emerald;
     border-radius: 1rem;
@@ -50,11 +50,53 @@ button {
     cursor: pointer;
 }
 
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 200px;
+
+    .labeled-input {
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+    
+        input {
+            display: block;
+            height: 24px;
+            padding: 4px;
+            width: 238px;
+            border-radius: 4px;
+            border-color: $emerald;
+            color: $emerald;
+        }
+    }
+
+    input[type="submit"] {
+        padding: .5rem 1rem;
+        width: 100%;
+        color: $emerald;
+        border-color: $emerald;
+        border-radius: 1rem;
+        font-weight: bold;
+        background-color: $button-color;
+        cursor: pointer;
+    }
+}
+
 .page-container {
     width: 100%;
 }
 
 .container {
+    margin: 4rem auto;
+    width: 250px;
+}
+
+
+.form-container {
     margin: 4rem auto;
     width: 250px;
 }
@@ -83,10 +125,68 @@ button {
     background-color: transparent;
 }
 
+.error-text {
+    color: red;
+}
+
 @media (max-width: $breakpoint-tablet) {
+
+    #root {
+        height: 100%;
+    }
+    
+    .page-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 100%;
+    }
+
     .container {
         margin: 2rem auto;
         width: 250px;
+    }
+
+    .form-container {
+        height: 100%;
+        width: 250px;
+        margin: 2rem auto;
+    }
+    
+    form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .labeled-input {
+            label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: bold;
+            }
+        
+            input {
+                display: block;
+                height: 24px;
+                width: 238px;
+                padding: 4px;
+                border-radius: 4px;
+                border-color: $emerald;
+                color: $emerald;
+            }
+        }
+
+        input[type="submit"] {
+            flex-grow: 1;
+            padding: .5rem 1rem;
+            width: 100%;
+            color: $emerald;
+            border-color: $emerald;
+            border-radius: 1rem;
+            font-weight: bold;
+            background-color: $button-color;
+            cursor: pointer;
+        }
     }
 
 }

@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
+import './firebase';
+
 import './app.scss';
 
 import { Navbar } from './components/Navbar';
 import { Header } from './components/Header';
+
 import { HomePage } from './pages/HomePage';
+import { LoginPage } from './pages/LoginPage';
 
 const pages = ['HOME', 'LOGIN'];
 
@@ -16,6 +20,10 @@ const App = () => {
         setPage('LOGIN');
     }
 
+    const handleSuccessfulLogin = (user) => {
+        setUser(user)
+    }
+
     const handleClickLogout = () => {
         setUser(null);
         setPage('HOME');
@@ -26,6 +34,11 @@ const App = () => {
     switch (page) {
         case 'HOME':
             currentPage = <HomePage/>;
+            break;
+        case 'LOGIN':
+            currentPage = <LoginPage
+                handleSuccessfulLogin={handleSuccessfulLogin}
+            />;
             break;
     }
 
