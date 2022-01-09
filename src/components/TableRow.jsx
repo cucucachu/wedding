@@ -22,7 +22,7 @@ export function TableRow(props) {
     )
 
     return (
-        <tr>
+        <tr rowid={data.id}>
             {cells}
         </tr>
     );

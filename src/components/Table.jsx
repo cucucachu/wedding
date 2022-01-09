@@ -13,7 +13,7 @@ export function Table(props) {
         rightButtons,
     } = props;
 
-    const tableHeaders = columns.map(c => <th key={`${keyPrefix}-header-${c.name}`}>{c.name}</th>)
+    const tableHeaders = columns.map((c, i) => <th key={`${keyPrefix}-header-${i}${c.name}`}>{c.name}</th>)
 
     const rows = data.map((row, rowIndex) => 
         <TableRow

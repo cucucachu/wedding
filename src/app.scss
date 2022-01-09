@@ -119,6 +119,7 @@ form {
 }
 
 table {
+    table-layout: fixed;
     width: 100%;
 
     thead {
@@ -130,12 +131,21 @@ table {
         tr {
             td {
                 text-align: center;
+                overflow: hidden;
 
                 button {
+                    width: 36px;
+                    height: 36px;
+                    padding: 0;
                     border: none;
                     margin: 0;
                     background-color: transparent;
+                    font-size: 18px;
                 }
+            }
+
+            .button-cell {
+                width: 36px;
             }
         }
     }
@@ -245,6 +255,7 @@ hr {
 .button-link {
     width: auto;
     margin: 16px;
+    font-size: 14px;
     padding: 0;
     border: none;
     background-color: transparent;

@@ -63,6 +63,7 @@ export function TableCell(props) {
         <td 
             row={rowIndex}
             column={column.property}
+            className={column.type === 'BUTTON' ? 'button-cell' : ''}
         >
             {cellContents}
         </td>

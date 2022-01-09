@@ -21,3 +21,14 @@ export async function updateGuest(guest) {
 
     return setDoc(doc(db, 'guests', id), guest);
 }
+
+export async function updateList(list) {
+    console.dir(list)
+    if (!list.id) {
+        throw new Error('Attempting to update a list that doesn\'t have an id.')
+    }
+    const id = list.id;
+    delete list.id;
+
+    return setDoc(doc(db, 'lists', id), list);
+}

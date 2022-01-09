@@ -3,6 +3,8 @@ import { collection, getDocs } from "firebase/firestore";
 
 import { db } from '../firebase';
 
+import { updateList } from '../firebase';
+
 import { TitleWithButtons } from '../components/TitleWithButtons';
 import { Table } from '../components/Table';
 
@@ -70,13 +72,46 @@ export function GuestListPage(props) {
         setGuests(updatedGuests);
     }
 
-    const handleClickCell = e => {
+    const handleClickCell = async e => {
         e.preventDefault();
+        console.log('click')
+
         const cellRow = e.target.parentElement.attributes.row.value;
         const property = e.target.parentElement.attributes.column.value;
+        const id = e.target.parentElement.parentElement.attributes.rowid.value;
+        let currentList, newList, currentListIndex;
 
-        if (property == 'view') {
-            handleClickChangePage('VIEWGUEST', guests[cellRow]);
+        console.log(property);
+        switch (property) {
+            case 'view':
+                handleClickChangePage('VIEWGUEST', guests.filter(g => g.id === id)[0]);
+                break;
+            case 'moveUp':
+                console.log('moveUp')
+                currentList = lists.filter(l => l.guests.filter(g => g === id).length)[0];
+                console.log(currentList.name)
+                currentListIndex = lists.indexOf(currentList);
+                if (currentListIndex > 0) {
+                    currentList.guests.splice(cellRow, 1);
+                    newList = lists[currentListIndex - 1];
+                    newList.guests.push(id);
+                    await updateList(currentList);
+                    await updateList(newList);
+                    getLists();
+                }
+                break;
+            case 'moveDown':
+                currentList = lists.filter(l => l.guests.filter(g => g === id).length)[0];
+                currentListIndex = lists.indexOf(currentList);
+                if (currentListIndex < lists.length - 1) {
+                    currentList.guests.splice(cellRow, 1);
+                    newList = lists[currentListIndex + 1];
+                    newList.guests.push(id);
+                    await updateList(currentList);
+                    await updateList(newList);
+                    getLists();
+                }
+                break;
         }
     }
 
@@ -103,12 +138,26 @@ export function GuestListPage(props) {
             onClick: handleClickCell,
             buttonText: '🔎',
         },
+        {
+            name: '',
+            type: 'BUTTON',
+            property: 'moveUp',
+            onClick: handleClickCell,
+            buttonText: '⬆️',
+        },
+        {
+            name: '',
+            type: 'BUTTON',
+            property: 'moveDown',
+            onClick: handleClickCell,
+            buttonText: '⬇️',
+        },
     ];
 
     const tables = lists.map(list => 
         <Table
-            keyPrefix={`key-table-${list.name}`}
-            key={`key-table-${list.name}`}
+            keyPrefix={`key-table-${list.name.replace(' ', '-')}`}
+            key={`key-table-${list.name.replace(' ', '-')}`}
             title={list.name}
             rightButtons={[{label: '➕', onClick: () => handleClickChangePage('ADDGUEST', list)}]}
             columns={columns}
