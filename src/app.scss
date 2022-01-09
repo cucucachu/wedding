@@ -173,6 +173,7 @@ hr {
 .table-container {
     width: 100%;
     text-align: center;
+    margin: $desktop-margin 0;
 
     h3 {
         font-size: 1.5rem;
@@ -203,7 +204,6 @@ hr {
 .info-container {
     display: flex;
     flex-direction: column;
-    height: 100%;
     width: 100%;
     margin: 2rem auto;
 
@@ -269,13 +269,31 @@ hr {
 }
 
 .title-with-buttons {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: block;
+    position: relative;
+    width: 100%;
 
     h2 {
-        flex-grow: 1;
+        width: 100%;
+        text-align: center;
+    }
+
+    .button-link-left {
+        position: absolute;
         margin: 0;
+        width: 36px;
+        height: 36px;
+        top: 0;
+        left: 0;
+    }
+
+    .button-link-right {
+        position: absolute;
+        margin: 0;
+        width: 36px;
+        height: 36px;
+        top: 0;
+        right: 0;
     }
 }
 

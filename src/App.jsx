@@ -11,6 +11,8 @@ import { LoginPage } from './pages/LoginPage';
 import { GuestListPage } from './pages/GuestListPage';
 import { ViewGuestPage } from './pages/ViewGuestPage';
 import { EditGuestPage } from './pages/EditGuestPage';
+import { AddListPage } from './pages/AddListPage';
+import { AddGuestPage } from './pages/AddGuestPage';
 
 const pages = ['HOME', 'LOGIN'];
 
@@ -18,13 +20,14 @@ const App = () => {
 
     const [page, setPage] = useState('HOME');
     const [user, setUser] = useState(null);
-    const [pageProps, setPageProps] = useState(null);
+    const [pageProps, setPageProps] = useState({});
 
-    const handleClickLoginButton = () => {
-        setPage('LOGIN');
+    const handleClickChangePage = (page, passedState) => {
+        setPageProps(passedState ? passedState : {});
+        setPage(page);
     }
 
-    const handleSuccessfulLogin = (user) => {
+    const handleSuccessfulLogin = user => {
         setUser(user);
         setPage('GUESTLIST');
     }
@@ -32,16 +35,6 @@ const App = () => {
     const handleClickLogout = () => {
         setUser(null);
         setPage('HOME');
-    }
-
-    const handleClickViewGuest = guest => {
-        setPageProps(guest);
-        setPage('VIEWGUEST');
-    }
-
-    const handleClickEditGuest = guest => {
-        setPageProps(guest);
-        setPage('EDITGUEST');
     }
 
     let currentPage;
@@ -57,21 +50,31 @@ const App = () => {
             break;
         case 'GUESTLIST':
             currentPage = <GuestListPage
-                handleClickViewGuest={handleClickViewGuest}
+                handleClickChangePage={handleClickChangePage}
             />;
             break;
         case 'VIEWGUEST':
             currentPage = <ViewGuestPage 
                 guest={pageProps}
-                onClickGuestList={() => setPage('GUESTLIST')}
-                onClickEditGuest={handleClickEditGuest}
+                handleClickChangePage={handleClickChangePage}
             />
             break;
         case 'EDITGUEST':
             currentPage = <EditGuestPage 
                 guest={pageProps}
-                onClickGuestList={() => setPage('GUESTLIST')}
-                onClickEditGuest={handleClickEditGuest}
+                handleClickChangePage={handleClickChangePage}
+            />
+            break;
+        case 'ADDLIST':
+            currentPage = <AddListPage 
+                lists={pageProps}
+                handleClickChangePage={handleClickChangePage}
+            />
+            break;
+        case 'ADDGUEST':
+            currentPage = <AddGuestPage 
+                list={pageProps}
+                handleClickChangePage={handleClickChangePage}
             />
             break;
         default:
@@ -79,11 +82,10 @@ const App = () => {
     }
 
     return (
-        // <h1>Hello</h1>
         <div className="page-container">
             <Navbar
                 loggedIn={user !== null}
-                onClickLogin={handleClickLoginButton}
+                onClickLogin={() => setPage('LOGIN')}
                 onClickLogout={handleClickLogout}
             />
             <Header />

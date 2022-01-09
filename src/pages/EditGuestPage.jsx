@@ -1,11 +1,12 @@
 import React, { useState} from 'react';
 
+import { TitleWithButtons } from '../components/TitleWithButtons';
 import { Form } from '../components/Form';
 
 import { updateGuest } from '../firebase';
 
 export function EditGuestPage(props) {
-    const { onClickGuestList } = props;
+    const { handleClickChangePage } = props;
 
     const [guest, setGuest] = useState(props.guest);
     const [error, setError] = useState('');
@@ -28,7 +29,7 @@ export function EditGuestPage(props) {
         e.preventDefault();
         try {
             await updateGuest({...guest});
-            onClickGuestList();
+            handleClickChangePage('GUESTLIST');
         }
         catch (error) {
             console.log(error);
@@ -68,10 +69,10 @@ export function EditGuestPage(props) {
 
     return (
         <div className="container">
-            <div className="title-with-buttons">
-                <button className="button-link" onClick={onClickGuestList}>❮</button>
-                <h2 className="center-text">{firstName} {lastName}</h2>
-            </div>
+            <TitleWithButtons
+                title={`${firstName} ${lastName}`}
+                leftButtons={[{label: '❮', onClick: () => handleClickChangePage('GUESTLIST')}]}
+            />
             {error && <p className="error-text">{error}</p>}
             <Form
                 fields={fields}

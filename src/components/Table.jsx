@@ -1,5 +1,6 @@
 import React from 'react';
 import { TableRow } from './TableRow';
+import { TitleWithButtons } from './TitleWithButtons';
 
 export function Table(props) {
     const {
@@ -8,6 +9,8 @@ export function Table(props) {
         columns,
         handleChangeCell,
         keyPrefix,
+        leftButtons,
+        rightButtons,
     } = props;
 
     const tableHeaders = columns.map(c => <th key={`${keyPrefix}-header-${c.name}`}>{c.name}</th>)
@@ -25,7 +28,13 @@ export function Table(props) {
 
     return (
         <div className="table-container">
-            {title && <h3>{title}</h3>}
+            {title && 
+                <TitleWithButtons 
+                    title={title}
+                    leftButtons={leftButtons}
+                    rightButtons={rightButtons}
+                />
+            }
             <table>
                 <thead>
                     <tr>

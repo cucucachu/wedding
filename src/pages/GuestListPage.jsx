@@ -3,10 +3,11 @@ import { collection, getDocs } from "firebase/firestore";
 
 import { db } from '../firebase';
 
+import { TitleWithButtons } from '../components/TitleWithButtons';
 import { Table } from '../components/Table';
 
 export function GuestListPage(props) {
-    const { handleClickViewGuest } = props;
+    const { handleClickChangePage } = props;
 
     const [guests, setGuests] = useState([]);
     const [lists, setLists] = useState([]);
@@ -36,8 +37,13 @@ export function GuestListPage(props) {
         if (!querySnapshot.isEmpty) {
             const listsArray = [];
     
-            for (let list of querySnapshot.docs) {
-                listsArray.push(list.data());
+            for (let doc of querySnapshot.docs) {
+                const list = doc.data();
+
+                listsArray.push({
+                    ...list,
+                    id: doc.id,
+                });
             }
 
             listsArray.sort((a, b) => a.order - b.order);
@@ -70,7 +76,7 @@ export function GuestListPage(props) {
         const property = e.target.parentElement.attributes.column.value;
 
         if (property == 'view') {
-            handleClickViewGuest(guests[cellRow]);
+            handleClickChangePage('VIEWGUEST', guests[cellRow]);
         }
     }
 
@@ -104,6 +110,7 @@ export function GuestListPage(props) {
             keyPrefix={`key-table-${list.name}`}
             key={`key-table-${list.name}`}
             title={list.name}
+            rightButtons={[{label: '➕', onClick: () => handleClickChangePage('ADDGUEST', list)}]}
             columns={columns}
             data={guests.filter(g => list.guests.includes(g.id))}
             handleChangeCell={handleChangeCell}
@@ -112,7 +119,10 @@ export function GuestListPage(props) {
     
     return (
         <div className='width-80 container'>
-            <h2 className="center-text">Guest List</h2>
+            <TitleWithButtons
+                title="Guest List"
+                rightButtons={[{label: '➕', onClick: () => handleClickChangePage('ADDLIST', lists)}]}
+            />
             {tables}
         </div>
     );

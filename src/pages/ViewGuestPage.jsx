@@ -1,9 +1,10 @@
 import React, { useState} from 'react';
 
+import { TitleWithButtons } from '../components/TitleWithButtons';
 import { LabeledValue } from '../components/LabeledValue';
 
 export function ViewGuestPage(props) {
-    const { onClickGuestList, onClickEditGuest } = props;
+    const { handleClickChangePage } = props;
 
     const [guest, setGuest] = useState(props.guest);
 
@@ -21,11 +22,12 @@ export function ViewGuestPage(props) {
 
     return (
         <div className="container">
-            <div className="title-with-buttons">
-                <button className="button-link" onClick={onClickGuestList}>❮</button>
-                <h2 className="center-text">{firstName} {lastName}</h2>
-                <button className="button-link" onClick={() => onClickEditGuest(guest)}>📝</button>
-            </div>
+            
+            <TitleWithButtons
+                title={`${firstName} ${lastName}`}
+                leftButtons={[{label: '❮', onClick: () => handleClickChangePage('GUESTLIST')}]}
+                rightButtons={[{label: '📝', onClick: () => handleClickChangePage('EDITGUEST', guest)}]}
+            />
             <div className="info-container">
                 <LabeledValue label="First Name" value={firstName}/>
                 <LabeledValue label="Last Name" value={lastName}/>
