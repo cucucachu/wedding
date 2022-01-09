@@ -68,7 +68,6 @@ export function GuestListPage(props) {
         e.preventDefault();
         const cellRow = e.target.parentElement.attributes.row.value;
         const property = e.target.parentElement.attributes.column.value;
-        console.log('in here')
 
         if (property == 'view') {
             handleClickViewGuest(guests[cellRow]);

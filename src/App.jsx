@@ -10,6 +10,7 @@ import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { GuestListPage } from './pages/GuestListPage';
 import { ViewGuestPage } from './pages/ViewGuestPage';
+import { EditGuestPage } from './pages/EditGuestPage';
 
 const pages = ['HOME', 'LOGIN'];
 
@@ -38,6 +39,11 @@ const App = () => {
         setPage('VIEWGUEST');
     }
 
+    const handleClickEditGuest = guest => {
+        setPageProps(guest);
+        setPage('EDITGUEST');
+    }
+
     let currentPage;
 
     switch (page) {
@@ -58,6 +64,14 @@ const App = () => {
             currentPage = <ViewGuestPage 
                 guest={pageProps}
                 onClickGuestList={() => setPage('GUESTLIST')}
+                onClickEditGuest={handleClickEditGuest}
+            />
+            break;
+        case 'EDITGUEST':
+            currentPage = <EditGuestPage 
+                guest={pageProps}
+                onClickGuestList={() => setPage('GUESTLIST')}
+                onClickEditGuest={handleClickEditGuest}
             />
             break;
         default:

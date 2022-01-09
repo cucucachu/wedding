@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Checkbox } from './Checkbox';
+
 export function TableCell(props) {
     const { 
         value, 
@@ -49,7 +51,7 @@ export function TableCell(props) {
                 cellContents = value;
                 break;
             case 'BOOLEAN':
-                cellContents = value ? '✅' : '❌'; 
+                cellContents = <Checkbox checked={value}/>; 
                 break;
             case 'BUTTON':
                 cellContents = <button onClick={column.onClick}>{column.buttonText}</button>
