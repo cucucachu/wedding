@@ -6,6 +6,7 @@ import { db } from '../firebase';
 import { Table } from '../components/Table';
 
 export function GuestListPage(props) {
+    const { handleClickViewGuest } = props;
 
     const [guests, setGuests] = useState([]);
     const [lists, setLists] = useState([]);
@@ -15,10 +16,14 @@ export function GuestListPage(props) {
         if (!querySnapshot.isEmpty) {
             const guestsArray = [];
     
-            for (let guest of querySnapshot.docs) {
+            for (let doc of querySnapshot.docs) {
+                const guest = doc.data();
+
+
                 guestsArray.push({
-                    id: guest.id,
-                    ...guest.data()
+                    id: doc.id,
+                    name: `${guest.firstName} ${guest.lastName}`,
+                    ...guest,
                 });
             }
     
@@ -45,7 +50,7 @@ export function GuestListPage(props) {
     useEffect(getLists, []);
 
     const handleChangeCell = e => {
-        console.dir(e.target.parentElement);
+        e.preventDefault();
         const cellRow = e.target.parentElement.attributes.row.value;
         const property = e.target.parentElement.attributes.column.value;
         const newValue = e.target.value;
@@ -59,18 +64,22 @@ export function GuestListPage(props) {
         setGuests(updatedGuests);
     }
 
+    const handleClickCell = e => {
+        e.preventDefault();
+        const cellRow = e.target.parentElement.attributes.row.value;
+        const property = e.target.parentElement.attributes.column.value;
+        console.log('in here')
+
+        if (property == 'view') {
+            handleClickViewGuest(guests[cellRow]);
+        }
+    }
+
     const columns = [
         {
-            name: 'First Name',
+            name: 'Name',
             type: 'TEXT',
-            edit: true,
-            property: 'firstName',
-        },
-        {
-            name: 'Last Name',
-            type: 'TEXT',
-            edit: true,
-            property: 'lastName',
+            property: 'name',
         },
         {
             name: 'RSVP',
@@ -81,6 +90,13 @@ export function GuestListPage(props) {
             name: 'Attending',
             type: 'BOOLEAN',
             property: 'attending',
+        },
+        {
+            name: '',
+            type: 'BUTTON',
+            property: 'view',
+            onClick: handleClickCell,
+            buttonText: '🔎',
         },
     ];
 

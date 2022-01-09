@@ -9,6 +9,7 @@ import { Header } from './components/Header';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { GuestListPage } from './pages/GuestListPage';
+import { ViewGuestPage } from './pages/ViewGuestPage';
 
 const pages = ['HOME', 'LOGIN'];
 
@@ -16,6 +17,7 @@ const App = () => {
 
     const [page, setPage] = useState('HOME');
     const [user, setUser] = useState(null);
+    const [pageProps, setPageProps] = useState(null);
 
     const handleClickLoginButton = () => {
         setPage('LOGIN');
@@ -31,6 +33,11 @@ const App = () => {
         setPage('HOME');
     }
 
+    const handleClickViewGuest = guest => {
+        setPageProps(guest);
+        setPage('VIEWGUEST');
+    }
+
     let currentPage;
 
     switch (page) {
@@ -43,7 +50,15 @@ const App = () => {
             />;
             break;
         case 'GUESTLIST':
-            currentPage = <GuestListPage/>;
+            currentPage = <GuestListPage
+                handleClickViewGuest={handleClickViewGuest}
+            />;
+            break;
+        case 'VIEWGUEST':
+            currentPage = <ViewGuestPage 
+                guest={pageProps}
+                onClickGuestList={() => setPage('GUESTLIST')}
+            />
             break;
         default:
             currentPage = <HomePage/>;
@@ -58,6 +73,7 @@ const App = () => {
                 onClickLogout={handleClickLogout}
             />
             <Header />
+            <hr/>
             {currentPage}
         </div>
     )

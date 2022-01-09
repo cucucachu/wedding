@@ -51,6 +51,8 @@ export function TableCell(props) {
             case 'BOOLEAN':
                 cellContents = value ? '✅' : '❌'; 
                 break;
+            case 'BUTTON':
+                cellContents = <button onClick={column.onClick}>{column.buttonText}</button>
             default:
         }
     }
