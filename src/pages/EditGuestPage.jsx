@@ -29,7 +29,7 @@ export function EditGuestPage(props) {
         e.preventDefault();
         try {
             await updateGuest({...guest});
-            handleClickChangePage('GUESTLIST');
+            handleClickChangePage('GUEST_LIST');
         }
         catch (error) {
             console.log(error);
@@ -71,7 +71,7 @@ export function EditGuestPage(props) {
         <div className="container">
             <TitleWithButtons
                 title={`${firstName} ${lastName}`}
-                leftButtons={[{label: '❮', onClick: () => handleClickChangePage('GUESTLIST')}]}
+                leftButtons={[{label: '❮', onClick: () => handleClickChangePage('GUEST_LIST')}]}
             />
             {error && <p className="error-text">{error}</p>}
             <Form

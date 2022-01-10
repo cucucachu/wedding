@@ -13,6 +13,8 @@ import { ViewGuestPage } from './pages/ViewGuestPage';
 import { EditGuestPage } from './pages/EditGuestPage';
 import { AddListPage } from './pages/AddListPage';
 import { AddGuestPage } from './pages/AddGuestPage';
+import { RSVPPage } from './pages/RSVPPage';
+import { CreateGuestAccountPage } from './pages/CreateGuestAccountPage';
 
 const pages = ['HOME', 'LOGIN'];
 
@@ -29,7 +31,7 @@ const App = () => {
 
     const handleSuccessfulLogin = user => {
         setUser(user);
-        setPage('GUESTLIST');
+        setPage('GUEST_LIST');
     }
 
     const handleClickLogout = () => {
@@ -41,39 +43,52 @@ const App = () => {
 
     switch (page) {
         case 'HOME':
-            currentPage = <HomePage/>;
+            currentPage = <HomePage
+                handleClickChangePage={handleClickChangePage}
+            />;
             break;
         case 'LOGIN':
             currentPage = <LoginPage
                 handleSuccessfulLogin={handleSuccessfulLogin}
             />;
             break;
-        case 'GUESTLIST':
+        case 'GUEST_LIST':
             currentPage = <GuestListPage
                 handleClickChangePage={handleClickChangePage}
             />;
             break;
-        case 'VIEWGUEST':
+        case 'VIEW_GUEST':
             currentPage = <ViewGuestPage 
                 guest={pageProps}
                 handleClickChangePage={handleClickChangePage}
             />
             break;
-        case 'EDITGUEST':
+        case 'EDIT_GUEST':
             currentPage = <EditGuestPage 
                 guest={pageProps}
                 handleClickChangePage={handleClickChangePage}
             />
             break;
-        case 'ADDLIST':
+        case 'ADD_LIST':
             currentPage = <AddListPage 
                 lists={pageProps}
                 handleClickChangePage={handleClickChangePage}
             />
             break;
-        case 'ADDGUEST':
+        case 'ADD_GUEST':
             currentPage = <AddGuestPage 
                 list={pageProps}
+                handleClickChangePage={handleClickChangePage}
+            />
+            break;
+        case 'RSVP':
+            currentPage = <RSVPPage
+                handleClickChangePage={handleClickChangePage}
+            />
+            break;
+        case 'CREATE_GUEST_ACCOUNT':
+            currentPage = <CreateGuestAccountPage
+                guest={pageProps}
                 handleClickChangePage={handleClickChangePage}
             />
             break;

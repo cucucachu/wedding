@@ -67,7 +67,7 @@ export function AddGuestPage(props) {
                 guests: [...list.guests, guestRef.id]
             });
 
-            handleClickChangePage('GUESTLIST');
+            handleClickChangePage('GUEST_LIST');
         }
         catch (error) {
             setError(error.message);
@@ -78,7 +78,7 @@ export function AddGuestPage(props) {
         <div className="container">
             <TitleWithButtons
                 title="Add Guest"
-                leftButtons={[{label: '❮', onClick: () => handleClickChangePage('GUESTLIST')}]}
+                leftButtons={[{label: '❮', onClick: () => handleClickChangePage('GUEST_LIST')}]}
             />
             {error && <p className="error-text">{error}</p>}
             <Form

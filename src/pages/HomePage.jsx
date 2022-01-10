@@ -3,7 +3,8 @@ import React from 'react';
 
 import '../app.scss';
 
-export const HomePage = () => {
+export function HomePage(props) {
+    const { handleClickChangePage } = props;
 
     return (
         <div className="container center-text">
@@ -14,7 +15,7 @@ export const HomePage = () => {
             <p>Stone Tree Golf Club</p>
             <p>9 StoneTree Lane</p>
             <p>Novato, CA 94945</p>
-            <button>RSVP</button>
+            <button onClick={e => handleClickChangePage('RSVP')}>RSVP</button>
         </div>
     )
 }

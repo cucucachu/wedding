@@ -25,8 +25,8 @@ export function ViewGuestPage(props) {
             
             <TitleWithButtons
                 title={`${firstName} ${lastName}`}
-                leftButtons={[{label: '❮', onClick: () => handleClickChangePage('GUESTLIST')}]}
-                rightButtons={[{label: '📝', onClick: () => handleClickChangePage('EDITGUEST', guest)}]}
+                leftButtons={[{label: '❮', onClick: () => handleClickChangePage('GUEST_LIST')}]}
+                rightButtons={[{label: '📝', onClick: () => handleClickChangePage('EDIT_GUEST', guest)}]}
             />
             <div className="info-container">
                 <LabeledValue label="First Name" value={firstName}/>

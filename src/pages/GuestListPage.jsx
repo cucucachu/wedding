@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from "firebase/firestore"; 
 
-import { db } from '../firebase';
 
-import { updateList } from '../firebase';
+import { updateList, getGuests, getLists } from '../firebase';
 
 import { TitleWithButtons } from '../components/TitleWithButtons';
 import { Table } from '../components/Table';
@@ -14,48 +12,48 @@ export function GuestListPage(props) {
     const [guests, setGuests] = useState([]);
     const [lists, setLists] = useState([]);
 
-    const getGuests = async () => {
-        const querySnapshot = await getDocs(collection(db, 'guests'));
-        if (!querySnapshot.isEmpty) {
-            const guestsArray = [];
+    // const getGuests = async () => {
+    //     const querySnapshot = await getDocs(collection(db, 'guests'));
+    //     if (!querySnapshot.isEmpty) {
+    //         const guestsArray = [];
     
-            for (let doc of querySnapshot.docs) {
-                const guest = doc.data();
+    //         for (let doc of querySnapshot.docs) {
+    //             const guest = doc.data();
 
 
-                guestsArray.push({
-                    id: doc.id,
-                    name: `${guest.firstName} ${guest.lastName}`,
-                    ...guest,
-                });
-            }
+    //             guestsArray.push({
+    //                 id: doc.id,
+    //                 name: `${guest.firstName} ${guest.lastName}`,
+    //                 ...guest,
+    //             });
+    //         }
     
-            setGuests(guestsArray);
-        }
-    }
+    //         setGuests(guestsArray);
+    //     }
+    // }
 
-    const getLists = async () => {
-        const querySnapshot = await getDocs(collection(db, 'lists'));
-        if (!querySnapshot.isEmpty) {
-            const listsArray = [];
+    // const getLists = async () => {
+    //     const querySnapshot = await getDocs(collection(db, 'lists'));
+    //     if (!querySnapshot.isEmpty) {
+    //         const listsArray = [];
     
-            for (let doc of querySnapshot.docs) {
-                const list = doc.data();
+    //         for (let doc of querySnapshot.docs) {
+    //             const list = doc.data();
 
-                listsArray.push({
-                    ...list,
-                    id: doc.id,
-                });
-            }
+    //             listsArray.push({
+    //                 ...list,
+    //                 id: doc.id,
+    //             });
+    //         }
 
-            listsArray.sort((a, b) => a.order - b.order);
+    //         listsArray.sort((a, b) => a.order - b.order);
     
-            setLists(listsArray);
-        }
-    }
+    //         setLists(listsArray);
+    //     }
+    // }
 
-    useEffect(getGuests, []);
-    useEffect(getLists, []);
+    useEffect(async () => setGuests(await getGuests()), []);
+    useEffect(async () => setLists(await getLists()), []);
 
     const handleChangeCell = e => {
         e.preventDefault();
@@ -84,7 +82,7 @@ export function GuestListPage(props) {
         console.log(property);
         switch (property) {
             case 'view':
-                handleClickChangePage('VIEWGUEST', guests.filter(g => g.id === id)[0]);
+                handleClickChangePage('VIEW_GUEST', guests.filter(g => g.id === id)[0]);
                 break;
             case 'moveUp':
                 console.log('moveUp')
@@ -97,7 +95,7 @@ export function GuestListPage(props) {
                     newList.guests.push(id);
                     await updateList(currentList);
                     await updateList(newList);
-                    getLists();
+                    setLists(await getLists());
                 }
                 break;
             case 'moveDown':
@@ -109,7 +107,7 @@ export function GuestListPage(props) {
                     newList.guests.push(id);
                     await updateList(currentList);
                     await updateList(newList);
-                    getLists();
+                    setLists(await getLists());
                 }
                 break;
         }
@@ -159,7 +157,7 @@ export function GuestListPage(props) {
             keyPrefix={`key-table-${list.name.replace(' ', '-')}`}
             key={`key-table-${list.name.replace(' ', '-')}`}
             title={list.name}
-            rightButtons={[{label: '➕', onClick: () => handleClickChangePage('ADDGUEST', list)}]}
+            rightButtons={[{label: '➕', onClick: () => handleClickChangePage('ADD_GUEST', list)}]}
             columns={columns}
             data={guests.filter(g => list.guests.includes(g.id))}
             handleChangeCell={handleChangeCell}
@@ -170,7 +168,7 @@ export function GuestListPage(props) {
         <div className='width-80 container'>
             <TitleWithButtons
                 title="Guest List"
-                rightButtons={[{label: '➕', onClick: () => handleClickChangePage('ADDLIST', lists)}]}
+                rightButtons={[{label: '➕', onClick: () => handleClickChangePage('ADD_LIST', lists)}]}
             />
             {tables}
         </div>

@@ -2,7 +2,7 @@
 
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, collection, doc, getDocs, setDoc } from 'firebase/firestore';
 
 import firebaseConfig from '../firebase.config.json';
 
@@ -10,6 +10,29 @@ import firebaseConfig from '../firebase.config.json';
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const db = getFirestore();
+
+
+export async function getGuests() {
+    const querySnapshot = await getDocs(collection(db, 'guests'));
+    if (!querySnapshot.isEmpty) {
+        const guests = [];
+
+        for (let doc of querySnapshot.docs) {
+            const guest = doc.data();
+
+
+            guests.push({
+                id: doc.id,
+                name: `${guest.firstName} ${guest.lastName}`,
+                ...guest,
+            });
+
+            guests.sort((a, b) => a.lastName - b.lastName);
+        }
+
+        return guests;
+    }
+}
 
 export async function updateGuest(guest) {
     if (!guest.id) {
@@ -20,6 +43,26 @@ export async function updateGuest(guest) {
     delete guest.name;
 
     return setDoc(doc(db, 'guests', id), guest);
+}
+
+export async function getLists() {
+    const querySnapshot = await getDocs(collection(db, 'lists'));
+    if (!querySnapshot.isEmpty) {
+        const lists = [];
+
+        for (let doc of querySnapshot.docs) {
+            const list = doc.data();
+
+            lists.push({
+                ...list,
+                id: doc.id,
+            });
+        }
+
+        lists.sort((a, b) => a.order - b.order);
+
+        return lists;
+    }
 }
 
 export async function updateList(list) {
