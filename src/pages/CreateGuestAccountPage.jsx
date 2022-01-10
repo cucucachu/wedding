@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 
+import { createGuestAccount } from '../firebase';
+
 import { TitleWithButtons } from '../components/TitleWithButtons';
 import { Form } from '../components/Form';
 
 export function CreateGuestAccountPage(props) {
 
-    const { guest, handleClickChangePage } = props;
-    const { error, setError } = props;
+    const { guest, handleClickChangePage, handleSuccessfulLoginGuest } = props;
 
     const [account, setAccount] = useState({
-        email: '',
+        email: guest.email ? guest.email : '',
         password: '',
         confirmPassword: '',
     });
+    const [error, setError] = useState('');
 
     const fields = [
         {
@@ -36,6 +38,8 @@ export function CreateGuestAccountPage(props) {
     ];
 
     const onChange = e => {
+        e.preventDefault();
+
         setAccount({
             ...account,
             [e.target.attributes.property.value]: e.target.value,
@@ -43,14 +47,22 @@ export function CreateGuestAccountPage(props) {
     }
 
     const onSubmit = async e => {
+        const { email, password, confirmPassword } = account;
+
         e.preventDefault();
+        if (password !== confirmPassword) {
+            setError('Your passwords do not match.')
+            return;
+        }
+
         try {
-            // await createAccount({...account, guest});
-            // handleClickChangePage('GUEST_HOME');
+            guest.email = email;
+            const userCredential = createGuestAccount(guest, password)
+            handleSuccessfulLoginGuest(userCredential.user);
         }
         catch (error) {
             console.log(error);
-            setError('Something went wrong :/');
+            setError(`Something went wrong :/\n${error.message}`);
         }
     }
 
@@ -59,26 +71,19 @@ export function CreateGuestAccountPage(props) {
             <TitleWithButtons
                 title={`Create an Account`}
             />
-            <p>If you plan to attend, please create an account.</p>
+            <p>Create an account to continue your RSVP.</p>
             <p>Don't worry. Cody created this site, so your data isn't going anywhere.</p>
             <p>
-                The account lets you update your RSVP, post images and messages, and receive
+                The account lets you update your RSVP, access the private wedding board and receive
                 emails about any wedding updates.
-            </p>
-            <p>
-                If you're RSVP'ing to say you will not be attending, click the "Will Not Attend" button below.
-                No need to create an account.
             </p>
             {error && <p className="error-text">{error}</p>}
             <Form
                 fields={fields}
-                data={guest}
+                data={account}
                 onChange={onChange}
                 onSubmit={onSubmit}
-                submitText="I Will Attend"
             />
-            <h3 className="center-text">Or</h3>
-            <button>I Will Not Attend</button>
         </div>
     )
 

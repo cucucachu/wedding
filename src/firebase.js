@@ -1,7 +1,7 @@
 
 
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, collection, doc, getDocs, setDoc } from 'firebase/firestore';
 
 import firebaseConfig from '../firebase.config.json';
@@ -45,6 +45,15 @@ export async function updateGuest(guest) {
     return setDoc(doc(db, 'guests', id), guest);
 }
 
+export async function createGuestAccount(guest, password) {
+    const userCredential = await createUserWithEmailAndPassword(auth, guest.email, password);
+
+    guest.uid = userCredential.user.uid;
+    await updateGuest(guest);
+    
+    return userCredential;
+}
+
 export async function getLists() {
     const querySnapshot = await getDocs(collection(db, 'lists'));
     if (!querySnapshot.isEmpty) {
@@ -66,7 +75,6 @@ export async function getLists() {
 }
 
 export async function updateList(list) {
-    console.dir(list)
     if (!list.id) {
         throw new Error('Attempting to update a list that doesn\'t have an id.')
     }

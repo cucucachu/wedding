@@ -124,6 +124,15 @@ form {
         background-color: $button-color;
         cursor: pointer;
     }
+
+    textarea {
+        padding: 8px;
+        width: calc(100% - 16px);
+        color: $emerald;
+        font-weight: bold;
+        background-color: #f5f5f5;
+        height: 200px;
+    }
 }
 
 table {
@@ -258,6 +267,14 @@ hr {
         }
 
     }
+}
+
+.button-wrapper {
+    border: none;
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
 }
 
 .button-link {

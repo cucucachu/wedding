@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { LabeledTextInput } from './LabeledTextInput';
+import { LabeledTextAreaInput } from './LabeledTextAreaInput';
 import { LabeledCheckboxInput } from './LabeledCheckboxInput';
 import { LabeledSelectInput } from './LabeledSelectInput';
 
@@ -12,6 +13,9 @@ export function LabeledInput(props) {
     }
     if (type === 'select') {
         return <LabeledSelectInput {...props}/>
+    }
+    if (type === 'textarea') {
+        return <LabeledTextAreaInput {...props}/>
     }
     else {
         return <LabeledTextInput {...props}/>

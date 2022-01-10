@@ -6,7 +6,7 @@ import { auth } from '../firebase';
 import credentials from '../../login.json';
 
 export function LoginPage(props) {
-    const { handleSuccessfulLogin } = props;
+    const { handleSuccessfulLoginHost } = props;
 
     const [email, setEmail] = useState(credentials.email);
     const [password, setPassword] = useState(credentials.password);
@@ -18,7 +18,7 @@ export function LoginPage(props) {
         try {
             const loginResponse = await signInWithEmailAndPassword(auth, email, password);
             setError('');
-            handleSuccessfulLogin(loginResponse.user);
+            handleSuccessfulLoginHost(loginResponse.user);
         }
         catch (error) {
             console.log(error.code);

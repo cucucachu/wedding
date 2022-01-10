@@ -3,12 +3,18 @@ import '../app.scss';
 
 
 
-export const Header = () => {
-
+export function Header(props) {
+    const { handleClickChangePage } = props;
+    
     return (
         <div className="container">
             <header>
-                <h1 className="center-text">Zoe +Cody</h1>
+                <button 
+                    onClick={() => handleClickChangePage('HOME')}
+                    className="button-wrapper"    
+                >
+                    <h1 className="center-text">Zoe +Cody</h1>
+                </button>
             </header>
         </div>
     )

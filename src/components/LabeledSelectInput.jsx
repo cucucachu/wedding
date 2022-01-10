@@ -3,8 +3,6 @@ import React from 'react';
 export function LabeledSelectInput(props) {
     const { type, label, value, required, property, options, onChange } = props;
 
-    console.dir(props);
-
     const htmlOptions = options.map((o, i) => 
         <option 
             value={o.value}

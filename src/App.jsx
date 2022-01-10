@@ -14,6 +14,8 @@ import { EditGuestPage } from './pages/EditGuestPage';
 import { AddListPage } from './pages/AddListPage';
 import { AddGuestPage } from './pages/AddGuestPage';
 import { RSVPPage } from './pages/RSVPPage';
+import { RSVPNoPage } from './pages/RSVPNoPage';
+import { RSVPNoCompletePage } from './pages/RSVPNoCompletePage';
 import { CreateGuestAccountPage } from './pages/CreateGuestAccountPage';
 
 const pages = ['HOME', 'LOGIN'];
@@ -29,9 +31,14 @@ const App = () => {
         setPage(page);
     }
 
-    const handleSuccessfulLogin = user => {
+    const handleSuccessfulLoginHost = user => {
         setUser(user);
         setPage('GUEST_LIST');
+    }
+
+    const handleSuccessfulLoginGuest = user => {
+        setUser(user);
+        setPage('GUEST_HOME');
     }
 
     const handleClickLogout = () => {
@@ -49,7 +56,7 @@ const App = () => {
             break;
         case 'LOGIN':
             currentPage = <LoginPage
-                handleSuccessfulLogin={handleSuccessfulLogin}
+                handleSuccessfulLoginHost={handleSuccessfulLoginHost}
             />;
             break;
         case 'GUEST_LIST':
@@ -86,10 +93,20 @@ const App = () => {
                 handleClickChangePage={handleClickChangePage}
             />
             break;
+        case 'RSVP_NO':
+            currentPage = <RSVPNoPage
+                guest={pageProps}
+                handleClickChangePage={handleClickChangePage}
+            />
+            break;
+        case 'RSVP_NO_COMPLETE':
+            currentPage = <RSVPNoCompletePage/>
+            break;
         case 'CREATE_GUEST_ACCOUNT':
             currentPage = <CreateGuestAccountPage
                 guest={pageProps}
                 handleClickChangePage={handleClickChangePage}
+                handleSuccessfulLoginGuest={handleSuccessfulLoginGuest}
             />
             break;
         default:
@@ -103,7 +120,7 @@ const App = () => {
                 onClickLogin={() => setPage('LOGIN')}
                 onClickLogout={handleClickLogout}
             />
-            <Header />
+            <Header handleClickChangePage={handleClickChangePage}/>
             <hr/>
             {currentPage}
         </div>

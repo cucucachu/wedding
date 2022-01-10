@@ -61,8 +61,6 @@ export function GuestListPage(props) {
         const property = e.target.parentElement.attributes.column.value;
         const newValue = e.target.value;
 
-        console.dir({cellRow, property, newValue})
-
         const updatedGuests = [...guests];
 
         updatedGuests[cellRow][property] = newValue;
@@ -72,22 +70,18 @@ export function GuestListPage(props) {
 
     const handleClickCell = async e => {
         e.preventDefault();
-        console.log('click')
 
         const cellRow = e.target.parentElement.attributes.row.value;
         const property = e.target.parentElement.attributes.column.value;
         const id = e.target.parentElement.parentElement.attributes.rowid.value;
         let currentList, newList, currentListIndex;
 
-        console.log(property);
         switch (property) {
             case 'view':
                 handleClickChangePage('VIEW_GUEST', guests.filter(g => g.id === id)[0]);
                 break;
             case 'moveUp':
-                console.log('moveUp')
                 currentList = lists.filter(l => l.guests.filter(g => g === id).length)[0];
-                console.log(currentList.name)
                 currentListIndex = lists.indexOf(currentList);
                 if (currentListIndex > 0) {
                     currentList.guests.splice(cellRow, 1);

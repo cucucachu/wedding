@@ -28,8 +28,6 @@ export function RSVPPage(props) {
     
     options = [initialOption, ...options];
 
-    console.dir(options)
-
     const fields = [
         {
             label: 'Name',
@@ -50,6 +48,12 @@ export function RSVPPage(props) {
         }
     }
 
+    const handleRSVPNo = e => {
+        if (selected !== 'DEFAULT') {
+            handleClickChangePage('RSVP_NO', guests.filter(g => g.id === selected)[0])
+        }
+    }
+
     return (
         <div className="container">
             <TitleWithButtons
@@ -62,7 +66,9 @@ export function RSVPPage(props) {
                 data={{name: selected}}
                 onChange={onChange}
                 onSubmit={onSubmit}
+                submitText={'I Plan to Attend'}
             />
+            <button onClick={handleRSVPNo}>I Will Not Attend</button>
         </div>
     )
 }
