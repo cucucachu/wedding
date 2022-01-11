@@ -15,7 +15,7 @@ export function HomePage(props) {
             <p>Stone Tree Golf Club</p>
             <p>9 StoneTree Lane</p>
             <p>Novato, CA 94945</p>
-            <button onClick={e => handleClickChangePage('RSVP')}>RSVP</button>
+            <button onClick={e => handleClickChangePage('GUEST_EMAIL')}>RSVP</button>
         </div>
     )
 }
