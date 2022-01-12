@@ -18,6 +18,8 @@ import { RSVPNoPage } from './pages/RSVPNoPage';
 import { RSVPNoCompletePage } from './pages/RSVPNoCompletePage';
 import { CreateGuestAccountPage } from './pages/CreateGuestAccountPage';
 import { GuestEmailPage } from './pages/GuestEmailPage';
+import { GuestCodePage } from './pages/GuestCodePage';
+import { GuestHomePage } from './pages/GuestHomePage';
 
 const pages = ['HOME', 'LOGIN'];
 
@@ -113,6 +115,19 @@ const App = () => {
         case 'GUEST_EMAIL':
             currentPage = <GuestEmailPage
                 handleClickChangePage={handleClickChangePage}
+            />
+            break;
+        case 'GUEST_CODE':
+            currentPage = <GuestCodePage
+                handleClickChangePage={handleClickChangePage}
+                email={pageProps}
+                handleSuccessfulLoginGuest={handleSuccessfulLoginGuest}
+            />
+            break;
+        case 'GUEST_HOME':
+            currentPage = <GuestHomePage
+                handleClickChangePage={handleClickChangePage}
+                {...pageProps}
             />
             break;
         default:

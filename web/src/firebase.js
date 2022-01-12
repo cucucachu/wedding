@@ -2,7 +2,9 @@
 
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, collection, doc, getDocs, setDoc } from 'firebase/firestore';
+import { getFirestore, collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
+
+import axios from 'axios';
 
 import firebaseConfig from '../firebase.config.json';
 
@@ -10,6 +12,33 @@ import firebaseConfig from '../firebase.config.json';
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const db = getFirestore();
+
+
+
+
+export async function getGuest(code) {
+    const querySnapshot = await getDocs(query(collection(db, 'guests'), where('code', '==', code)));
+    if (querySnapshot.isEmpty) {
+        return null;
+    }
+    const guests = [];
+
+    for (let doc of querySnapshot.docs) {
+        const guest = doc.data();
+
+
+        guests.push({
+            id: doc.id,
+            name: `${guest.firstName} ${guest.lastName}`,
+            ...guest,
+        });
+
+        guests.sort((a, b) => a.lastName - b.lastName);
+    }
+
+    return guests[0];
+    
+}
 
 
 export async function getGuests() {
@@ -45,10 +74,21 @@ export async function updateGuest(guest) {
     return setDoc(doc(db, 'guests', id), guest);
 }
 
-export async function createGuestAccount(guest, password) {
-    const userCredential = await createUserWithEmailAndPassword(auth, guest.email, password);
+export async function createGuestAccount(email, code) {
+    const guest = await getGuest(code);
+
+    if (!guest) {
+        throw new Error(`Could not find a guest with code ${code}`);
+    }
+
+    if (guest.uid) {
+        throw new Error(`An account already exists for guest ${guest.id}`);
+    }
+
+    const userCredential = await createUserWithEmailAndPassword(auth, email, code);
 
     guest.uid = userCredential.user.uid;
+    guest.email = email;
     await updateGuest(guest);
     
     return userCredential;
@@ -82,4 +122,20 @@ export async function updateList(list) {
     delete list.id;
 
     return setDoc(doc(db, 'lists', id), list);
+}
+
+export async function checkGuestCode(code) {
+    const response = await axios.post(
+        'https://us-central1-wedding-1be73.cloudfunctions.net/checkGuestCode',
+         {
+             code
+        }, 
+        {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,POST',
+            }
+        }
+    );
+    return response.data;
 }
