@@ -3,6 +3,8 @@ import './firebase';
 
 import './app.scss';
 
+import { logout } from './firebase';
+
 import { Navbar } from './components/Navbar';
 import { Header } from './components/Header';
 
@@ -16,7 +18,6 @@ import { AddGuestPage } from './pages/AddGuestPage';
 import { RSVPPage } from './pages/RSVPPage';
 import { RSVPNoPage } from './pages/RSVPNoPage';
 import { RSVPNoCompletePage } from './pages/RSVPNoCompletePage';
-import { CreateGuestAccountPage } from './pages/CreateGuestAccountPage';
 import { GuestEmailPage } from './pages/GuestEmailPage';
 import { GuestCodePage } from './pages/GuestCodePage';
 import { GuestHomePage } from './pages/GuestHomePage';
@@ -44,7 +45,8 @@ const App = () => {
         setPage('GUEST_HOME');
     }
 
-    const handleClickLogout = () => {
+    const handleClickLogout = async () => {
+        await logout();
         setUser(null);
         setPage('HOME');
     }
@@ -105,13 +107,6 @@ const App = () => {
         case 'RSVP_NO_COMPLETE':
             currentPage = <RSVPNoCompletePage/>
             break;
-        case 'CREATE_GUEST_ACCOUNT':
-            currentPage = <CreateGuestAccountPage
-                guest={pageProps}
-                handleClickChangePage={handleClickChangePage}
-                handleSuccessfulLoginGuest={handleSuccessfulLoginGuest}
-            />
-            break;
         case 'GUEST_EMAIL':
             currentPage = <GuestEmailPage
                 handleClickChangePage={handleClickChangePage}
@@ -127,7 +122,7 @@ const App = () => {
         case 'GUEST_HOME':
             currentPage = <GuestHomePage
                 handleClickChangePage={handleClickChangePage}
-                {...pageProps}
+                user={user}
             />
             break;
         default:

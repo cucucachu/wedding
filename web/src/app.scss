@@ -213,6 +213,21 @@ hr {
     width: 100%;
 }
 
+.spinner {
+    border: 4px solid white; 
+    border-top: 4px solid $emerald; 
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    animation: spin 2s linear infinite;
+    margin-left: auto;
+    margin-right: auto;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 .center-content {
     display: block;
     margin: 0 auto;

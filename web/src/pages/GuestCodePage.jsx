@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 
-import { checkGuestCode, createGuestAccount } from '../firebase';
+import { checkGuestCode, loginOrCreateGuestAccount } from '../firebase';
 
 import { TitleWithButtons } from '../components/TitleWithButtons';
 import { Form } from '../components/Form';
+import { Spinner } from '../components/Spinner';
 
 export function GuestCodePage(props) {
     const { handleClickChangePage, handleSuccessfulLoginGuest, email } = props;
 
     const [code, setCode] = useState('');
     const [error, setError] = useState(' ');
+    const [loading, setLoading] = useState(false);
 
     const fields = [{
         label: 'Guest Code',
@@ -26,18 +28,22 @@ export function GuestCodePage(props) {
 
     const onSubmit = async e => {
         try {
+            setLoading(true);
             const { valid } = await checkGuestCode(code);
 
             if (valid) {
                 setError(' ');
-                const userCredential = await createGuestAccount(email, code);
+                const userCredential = await loginOrCreateGuestAccount(email, code);
+                console.log('done with firebase');
                 await handleSuccessfulLoginGuest(userCredential.user);
             }
             else {
+                setLoading(false);
                 setError('Inavlid Code');
             }
         }
         catch (error) {
+            setLoading(false);
             setError(error.message);
         }
     }
@@ -46,18 +52,22 @@ export function GuestCodePage(props) {
     return (
         <div className='container'>
             <TitleWithButtons
-                leftButtons={[{label: '❮', onClick: () => handleClickChangePage('HOME')}]}
+                leftButtons={[{label: '❮', onClick: () => handleClickChangePage('GUEST_EMAIL')}]}
                 title="RSVP"
             />
-            <p>Please enter the guest code that came with your invitation.</p>
-            <p className="error-text">{error}</p>
-            <Form
-                fields={fields}
-                data={{code}}
-                onChange={onChange}
-                onSubmit={onSubmit}
-                submitText={'Submit'}
-            />
+            {loading ? <Spinner/> :
+                <Fragment>
+                    <p>Please enter the guest code that came with your invitation.</p>
+                    <p className="error-text">{error}</p>
+                    <Form
+                        fields={fields}
+                        data={{code}}
+                        onChange={onChange}
+                        onSubmit={onSubmit}
+                        submitText={'Submit'}
+                    />
+                </Fragment>
+            }
         </div>
     )
 }

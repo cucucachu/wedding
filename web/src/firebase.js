@@ -1,26 +1,89 @@
 
 
 import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
 
 import axios from 'axios';
 
 import firebaseConfig from '../firebase.config.json';
 
-
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const db = getFirestore();
 
+const firebaseFunctions = axios.create({
+    baseURL: 'https://us-central1-wedding-1be73.cloudfunctions.net/app',
+    headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,POST',
+        'Authorization': `Bearer ${auth?.currentUser?.getIdToken(true)}`
+    }
+})
+
+export const logout = () => auth.signOut();
+
+export async function loginOrCreateGuestAccount(email, code) {
+    let userCredential;
+
+    try {
+        userCredential = await signInWithEmailAndPassword(auth, email, code);
+        console.log('sign in succesful');
+        const guest = await getGuest({code});
+        if (guest.uid !== userCredential.user.uid || guest.email !== email) {
+            await deleteAccount(userCredential.user.uid);
+            await logout();
+            const error = new Error('Account email is different than guest email.')
+            error.code = 1;
+            throw error;
+        }
+    }
+    catch (error) {
+        if (error.code == 'auth/user-not-found') {
+            userCredential = await createUserWithEmailAndPassword(auth, email, code);
+            console.log('sign in unsuccessful');
+
+            const guest = await getGuest({code});
+
+            if (guest.uid) {
+                await deleteAccount(userCredential.user.uid);
+                await logout();
+                throw new Error('An account already exists for this guest code, but the email given doesn\'t match.');
+            }
+            
+            guest.uid = userCredential.user.uid;
+            guest.email = email;
+            await updateGuest(guest);
+        }
+        else if (error.code === 1) {
+            throw error;
+        }
+    }
+    
+    return userCredential;
+}
 
 
+export async function getGuest({code, uid}) {
+    if (!code && !uid) {
+    }
 
-export async function getGuest(code) {
-    const querySnapshot = await getDocs(query(collection(db, 'guests'), where('code', '==', code)));
+    let querySnapshot;
+
+    if (code) {
+        querySnapshot = await getDocs(query(collection(db, 'guests'), where('code', '==', code)));
+    }
+    else if (uid) {
+        querySnapshot = await getDocs(query(collection(db, 'guests'), where('uid', '==', uid)));
+    }
+    else {
+        throw new Error('getGuest() called with no parameters.');
+    }
+
     if (querySnapshot.isEmpty) {
         return null;
     }
+    
     const guests = [];
 
     for (let doc of querySnapshot.docs) {
@@ -74,26 +137,6 @@ export async function updateGuest(guest) {
     return setDoc(doc(db, 'guests', id), guest);
 }
 
-export async function createGuestAccount(email, code) {
-    const guest = await getGuest(code);
-
-    if (!guest) {
-        throw new Error(`Could not find a guest with code ${code}`);
-    }
-
-    if (guest.uid) {
-        throw new Error(`An account already exists for guest ${guest.id}`);
-    }
-
-    const userCredential = await createUserWithEmailAndPassword(auth, email, code);
-
-    guest.uid = userCredential.user.uid;
-    guest.email = email;
-    await updateGuest(guest);
-    
-    return userCredential;
-}
-
 export async function getLists() {
     const querySnapshot = await getDocs(collection(db, 'lists'));
     if (!querySnapshot.isEmpty) {
@@ -125,17 +168,20 @@ export async function updateList(list) {
 }
 
 export async function checkGuestCode(code) {
-    const response = await axios.post(
-        'https://us-central1-wedding-1be73.cloudfunctions.net/checkGuestCode',
-         {
-             code
-        }, 
-        {
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET,POST',
-            }
+    const response = await firebaseFunctions.post('/checkGuestCode', { code });
+    return response.data;
+}
+
+export async function deleteAccount(uid) {
+    const token = await auth?.currentUser?.getIdToken(true);
+
+    const response = await firebaseFunctions.post('/deleteAccount', { uid }, {
+        baseURL: 'https://us-central1-wedding-1be73.cloudfunctions.net/app',
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,POST',
+            'Authorization': `Bearer ${token}`
         }
-    );
+    });
     return response.data;
 }
