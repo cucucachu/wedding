@@ -173,6 +173,14 @@ hr {
     color: $emerald;
 }
 
+img {
+    display: block;
+    max-width:100%;
+    width: auto;
+    height: auto;
+    margin-bottom: 8px;
+}
+
 .page-container {
     display: flex;
     flex-direction: column;

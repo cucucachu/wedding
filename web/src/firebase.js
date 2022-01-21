@@ -3,6 +3,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes } from 'firebase/storage';
 
 import axios from 'axios';
 
@@ -11,6 +12,7 @@ import firebaseConfig from '../firebase.config.json';
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const db = getFirestore();
+const storage = getStorage();
 
 const firebaseFunctions = axios.create({
     baseURL: 'https://us-central1-wedding-1be73.cloudfunctions.net/app',
@@ -167,6 +169,16 @@ export async function updateList(list) {
     return setDoc(doc(db, 'lists', id), list);
 }
 
+// Firebase Storage Calls
+
+export async function uploadImage(storagePath, image) {
+    const imageRef = ref(storage, storagePath);
+
+    return uploadBytes(imageRef, image);
+}
+
+
+// Firebase Function Calls
 export async function checkGuestCode(code) {
     const response = await firebaseFunctions.post('/checkGuestCode', { code });
     return response.data;

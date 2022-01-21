@@ -1,37 +1,120 @@
 import React, { useState } from 'react';
 
+import { updateGuest, uploadImage } from '../firebase';
+
 import { Spinner } from "../components/Spinner";
+import { RSVPStart } from './RSVPStart';
+import { RSVPVaccine } from './RSVPVaccine';
+import { RSVPUpload } from './RSVPUpload';
+import { RSVPTentative } from './RSVPTentative';
+import { RSVPConfirmed } from  './RSVPConfirmed';
 
 export function RSVP(props) {
-    const { guest } = props;
+    const { 
+        guest,
+        loadGuest,
+    } = props;
 
-    const [step, setStep] = useState('START');
+    const { rsvpState } = guest;
+
+    const [error, setError] = useState('');
 
     let display;
 
-    if (guest) {
-        switch(step) {
-            case 'YES_OR_NO':
-                break;
-            case 'VACCINE_QUESTION':
-                break;
-            case 'UPLOAD':
-                break;
-            case 'NO':
-                break;
-            case 'DONE':
-                break;
-            default:
-                display = <Spinner/>
+    let initialStep = 'YES_OR_NO';
+
+    if (rsvpState === 'YES' || rsvpState === 'NO') {
+        initialStep = 'CONFIRMED';
+    }
+    else if (rsvpState === 'TENTATIVE') {
+        initialStep = 'TENTATIVE';
+    }
+
+    const [step, setStep] = useState(initialStep)
+
+    async function handleRSVPNo() {
+        const updatedGuest = {...guest};
+        updatedGuest.rsvpState = 'NO';
+        try {
+            await updateGuest(updatedGuest);
+            await loadGuest();
+        }
+        catch (error) {
+            setError(error.message);
         }
     }
-    else {
+
+    async function handleRSVPYes(image) {
+        if (image) {
+            const updatedGuest = {...guest};
+            try {
+                await uploadImage(`/vaccineImages/${guest.id}`, image);
+                updatedGuest.rsvpState = 'YES';
+                await updateGuest(updatedGuest);
+                await loadGuest();
+            }
+            catch (error) {
+                setError(error.message);
+            }
+        }
+        else {
+            setError('Please select an image.');
+        }
+    }
+
+    async function handleRSVPTentative() {
+        const updatedGuest = {...guest};
+        updatedGuest.rsvpState = 'TENTATIVE';
+        try {
+            await updateGuest(updatedGuest);
+            await loadGuest();
+        }
+        catch (error) {
+            setError(error.message);
+        }
+    }
+
+    switch(step) {
+        case 'YES_OR_NO':
+            display = <RSVPStart
+                setStep={setStep}
+                handleRSVPNo={handleRSVPNo}
+            />
+            break;
+        case 'VACCINE_QUESTION':
+            display = <RSVPVaccine
+                setStep={setStep}
+                handleRSVPTentative={handleRSVPTentative}
+                handleRSVPNo={handleRSVPNo}
+            />
+            break;
+        case 'UPLOAD':
+            display = <RSVPUpload
+                handleRSVPYes={handleRSVPYes}
+            />
+            break;
+        case 'CONFIRMED':
+            display = <RSVPConfirmed 
+                rsvpState={rsvpState}
+                setStep={setStep}
+            />
+            break;
+        case 'TENTATIVE':
+            display = <RSVPTentative 
+                setStep={setStep}
+            />
+            break;
+        default:
+            display = <Spinner/>
     }
 
     return (
         <div>
+            <hr/>
             <h3 className="center-text">RSVP</h3>
+            <p className="error-text">{error}</p>
             {display}
+            <hr/>
         </div>
     );
 }
