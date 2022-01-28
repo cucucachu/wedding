@@ -15,6 +15,7 @@ import { ViewGuestPage } from './pages/ViewGuestPage';
 import { EditGuestPage } from './pages/EditGuestPage';
 import { AddListPage } from './pages/AddListPage';
 import { AddGuestPage } from './pages/AddGuestPage';
+import { EditListPage } from './pages/EditListPage';
 import { RSVPPage } from './pages/RSVPPage';
 import { RSVPNoPage } from './pages/RSVPNoPage';
 import { RSVPNoCompletePage } from './pages/RSVPNoCompletePage';
@@ -90,6 +91,13 @@ const App = () => {
         case 'ADD_GUEST':
             currentPage = <AddGuestPage 
                 list={pageProps}
+                handleClickChangePage={handleClickChangePage}
+            />
+            break;
+        case 'EDIT_LIST':
+            currentPage = <EditListPage 
+                list={pageProps.list}
+                currentGuests={pageProps.currentGuests}
                 handleClickChangePage={handleClickChangePage}
             />
             break;

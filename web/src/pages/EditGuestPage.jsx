@@ -4,6 +4,7 @@ import { TitleWithButtons } from '../components/TitleWithButtons';
 import { Form } from '../components/Form';
 
 import { updateGuest } from '../firebase';
+import { LabeledValue } from '../components/LabeledValue';
 
 export function EditGuestPage(props) {
     const { handleClickChangePage } = props;
@@ -14,6 +15,7 @@ export function EditGuestPage(props) {
     const {
         firstName,
         lastName,
+        code,
     } = props.guest;
 
     const onChange = e => {
@@ -73,6 +75,7 @@ export function EditGuestPage(props) {
                 title={`${firstName} ${lastName}`}
                 leftButtons={[{label: '❮', onClick: () => handleClickChangePage('GUEST_LIST')}]}
             />
+            <LabeledValue label="Guest Code" value={code}/>
             {error && <p className="error-text">{error}</p>}
             <Form
                 fields={fields}

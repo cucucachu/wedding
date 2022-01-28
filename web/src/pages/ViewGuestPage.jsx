@@ -1,42 +1,49 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect } from 'react';
+
+import { getVaccineImageURL } from '../firebase';
 
 import { TitleWithButtons } from '../components/TitleWithButtons';
 import { LabeledValue } from '../components/LabeledValue';
+import Symbols from '../components/Symbols';
 
 export function ViewGuestPage(props) {
     const { handleClickChangePage } = props;
 
     const [guest, setGuest] = useState(props.guest);
+    const [vaccineURL, setVaccineURL] = useState('');
 
     const {
         firstName,
         lastName,
         email,
-        hasPlusOne,
-        rsvp,
-        vaccinated,
-        vaccineVerified,
-        vaccineImage,
-        attending,
+        code,
+        rsvpState,
+        rsvpDate,
+        id,
     } = guest;
+
+    
+
+    useEffect(async () => { 
+        setVaccineURL(await getVaccineImageURL(id))
+    }, [])
 
     return (
         <div className="container">
             
             <TitleWithButtons
                 title={`${firstName} ${lastName}`}
-                leftButtons={[{label: '❮', onClick: () => handleClickChangePage('GUEST_LIST')}]}
-                rightButtons={[{label: '📝', onClick: () => handleClickChangePage('EDIT_GUEST', guest)}]}
+                leftButtons={[{label: Symbols.left, onClick: () => handleClickChangePage('GUEST_LIST')}]}
+                rightButtons={[{label: Symbols.edit, onClick: () => handleClickChangePage('EDIT_GUEST', guest)}]}
             />
             <div className="info-container">
                 <LabeledValue label="First Name" value={firstName}/>
                 <LabeledValue label="Last Name" value={lastName}/>
                 <LabeledValue label="Email" value={email}/>
-                <LabeledValue label="Allowed a Plus 1" value={hasPlusOne}/>
-                <LabeledValue label="Has RSVP'ed" value={rsvp}/>
-                <LabeledValue label="Is Vaccinated" value={vaccinated}/>
-                <LabeledValue label="Vaccination Verified" value={vaccineVerified}/>
-                <LabeledValue label="Is Attending" value={attending}/>
+                <LabeledValue label="RSVP" value={rsvpState}/>
+                <LabeledValue label="Guest Code" value={code}/>
+                <p><strong>Vaccine Image</strong></p>
+                {vaccineURL && <img src={vaccineURL}/>}
             </div>
         </div>
     )

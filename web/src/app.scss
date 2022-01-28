@@ -159,10 +159,21 @@ table {
                     background-color: transparent;
                     font-size: 18px;
                 }
+
+                input {
+                    margin: 4px 0;
+                    width: calc(100% - 10px);
+                }
             }
 
             .button-cell {
                 width: 36px;
+            }
+
+            .buttons-cell {
+                button {
+                    display: inline;
+                }
             }
         }
     }

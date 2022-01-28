@@ -3,7 +3,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 import axios from 'axios';
 
@@ -175,6 +175,11 @@ export async function uploadImage(storagePath, image) {
     const imageRef = ref(storage, storagePath);
 
     return uploadBytes(imageRef, image);
+}
+
+export async function getVaccineImageURL(guestId) {
+    console.log(`vaccineImages/${guestId}`)
+    return getDownloadURL(ref(storage, `vaccineImages/${guestId}`));
 }
 
 

@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 
 import { updateList, getGuests, getLists } from '../firebase';
 
+import Symbols from '../components/Symbols';
+
 import { TitleWithButtons } from '../components/TitleWithButtons';
 import { Table } from '../components/Table';
 
@@ -12,67 +14,14 @@ export function GuestListPage(props) {
     const [guests, setGuests] = useState([]);
     const [lists, setLists] = useState([]);
 
-    // const getGuests = async () => {
-    //     const querySnapshot = await getDocs(collection(db, 'guests'));
-    //     if (!querySnapshot.isEmpty) {
-    //         const guestsArray = [];
-    
-    //         for (let doc of querySnapshot.docs) {
-    //             const guest = doc.data();
-
-
-    //             guestsArray.push({
-    //                 id: doc.id,
-    //                 name: `${guest.firstName} ${guest.lastName}`,
-    //                 ...guest,
-    //             });
-    //         }
-    
-    //         setGuests(guestsArray);
-    //     }
-    // }
-
-    // const getLists = async () => {
-    //     const querySnapshot = await getDocs(collection(db, 'lists'));
-    //     if (!querySnapshot.isEmpty) {
-    //         const listsArray = [];
-    
-    //         for (let doc of querySnapshot.docs) {
-    //             const list = doc.data();
-
-    //             listsArray.push({
-    //                 ...list,
-    //                 id: doc.id,
-    //             });
-    //         }
-
-    //         listsArray.sort((a, b) => a.order - b.order);
-    
-    //         setLists(listsArray);
-    //     }
-    // }
-
     useEffect(async () => setGuests(await getGuests()), []);
     useEffect(async () => setLists(await getLists()), []);
-
-    const handleChangeCell = e => {
-        e.preventDefault();
-        const cellRow = e.target.parentElement.attributes.row.value;
-        const property = e.target.parentElement.attributes.column.value;
-        const newValue = e.target.value;
-
-        const updatedGuests = [...guests];
-
-        updatedGuests[cellRow][property] = newValue;
-
-        setGuests(updatedGuests);
-    }
 
     const handleClickCell = async e => {
         e.preventDefault();
 
         const cellRow = e.target.parentElement.attributes.row.value;
-        const property = e.target.parentElement.attributes.column.value;
+        const property = e.target.name ? e.target.name : e.target.parentElement.name;
         const id = e.target.parentElement.parentElement.attributes.rowid.value;
         let currentList, newList, currentListIndex;
 
@@ -107,42 +56,44 @@ export function GuestListPage(props) {
         }
     }
 
+    const handleClickEditList = list => {
+        const guestsForList =  guests.filter(g => list.guests.includes(g.id));
+        handleClickChangePage('EDIT_LIST', {list, currentGuests: guestsForList})
+    }
+
     const columns = [
+        {
+            name: '',
+            type: 'BUTTONS',
+            buttons: [
+                {
+                    property: 'view',
+                    onClick: handleClickCell,
+                    buttonText: Symbols.view,
+
+                },
+                {
+                    property: 'moveUp',
+                    onClick: handleClickCell,
+                    buttonText: Symbols.up,
+
+                },
+                {
+                    property: 'moveDown',
+                    onClick: handleClickCell,
+                    buttonText: Symbols.down,
+                }
+            ]
+        },
         {
             name: 'Name',
             type: 'TEXT',
             property: 'name',
         },
         {
-            name: 'RSVP',
-            type: 'BOOLEAN',
-            property: 'rsvp',
-        },
-        {
             name: 'Attending',
-            type: 'BOOLEAN',
-            property: 'attending',
-        },
-        {
-            name: '',
-            type: 'BUTTON',
-            property: 'view',
-            onClick: handleClickCell,
-            buttonText: '🔎',
-        },
-        {
-            name: '',
-            type: 'BUTTON',
-            property: 'moveUp',
-            onClick: handleClickCell,
-            buttonText: '⬆️',
-        },
-        {
-            name: '',
-            type: 'BUTTON',
-            property: 'moveDown',
-            onClick: handleClickCell,
-            buttonText: '⬇️',
+            type: 'TEXT',
+            property: 'rsvpState',
         },
     ];
 
@@ -151,10 +102,9 @@ export function GuestListPage(props) {
             keyPrefix={`key-table-${list.name.replace(' ', '-')}`}
             key={`key-table-${list.name.replace(' ', '-')}`}
             title={list.name}
-            rightButtons={[{label: '➕', onClick: () => handleClickChangePage('ADD_GUEST', list)}]}
+            rightButtons={[{label: Symbols.edit, onClick: () => handleClickEditList(list)}]}
             columns={columns}
             data={guests.filter(g => list.guests.includes(g.id))}
-            handleChangeCell={handleChangeCell}
         />
     )
     
@@ -162,7 +112,7 @@ export function GuestListPage(props) {
         <div className='width-80 container'>
             <TitleWithButtons
                 title="Guest List"
-                rightButtons={[{label: '➕', onClick: () => handleClickChangePage('ADD_LIST', lists)}]}
+                rightButtons={[{label: Symbols.plus, onClick: () => handleClickChangePage('ADD_LIST', lists)}]}
             />
             {tables}
         </div>
