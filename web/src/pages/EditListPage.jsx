@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
-import { collection, addDoc, doc, setDoc } from "firebase/firestore"; 
 
-import { db } from '../firebase';
+import { updateGuestList } from '../firebase';
 
 import { TitleWithButtons } from '../components/TitleWithButtons';
 import { Table } from '../components/Table';
 import Symbols from '../components/Symbols';
+import { Form } from '../components/Form';
+import { Spinner } from '../components/Spinner';
 
 export function EditListPage(props) {
-    const { handleClickChangePage, list, currentGuests } = props;
+    const { handleClickChangePage, currentList, currentGuests } = props;
+
+    if (!currentList) {
+        return <Spinner/>
+    }
 
     const emptyGuest = {
         firstName: '',
@@ -18,24 +23,21 @@ export function EditListPage(props) {
         city: '',
         state: '',
         zip: '',
+        hasPlusOne: false,
         removeable: true,
     }
 
-    const randomGuestCode = () => {
-        const numbers = [];
-        for (let i = 0; i < 6; i++) {
-            numbers.push(Math.floor((Math.random() * 26) + 65));
-        }
+    const primaryGuests = currentGuests.filter(g => !g.additionalGuestFor);
+    const additionalGuests = currentGuests.filter(g => g.additionalGuestFor);
 
-        return String.fromCharCode(...numbers);
-    }
-
-    const [guests, setGuests] = useState(currentGuests && currentGuests.length ? currentGuests : [{...emptyGuest, code: randomGuestCode()}]);
+    // const [guests, setGuests] = useState(currentGuests && currentGuests.length ? currentGuests : [{...emptyGuest}]);
+    const [guests, setGuests] = useState(currentGuests && currentGuests.length ? primaryGuests : [{...emptyGuest}]);
+    const [list, setList] = useState({...currentList});
     const [error, setError] = useState('');
 
     const onAddGuest = () => {
         const newGuests = guests.map(g => {return {...g}});
-        newGuests.push({...emptyGuest, code: randomGuestCode()});
+        newGuests.push({...emptyGuest});
         setGuests(newGuests);
     }
 
@@ -47,34 +49,40 @@ export function EditListPage(props) {
     }
 
     const handleChangeCell = e => {
-        e.preventDefault();
 
         const cellRow = e.target.parentElement.attributes.row.value;
         const property = e.target.name ? e.target.name : e.target.parentElement.name;
 
         const newGuests = guests.map(g => {return {...g}});
 
-        newGuests[cellRow][property] = e.target.value;
+        let value = e.target.value;
+
+        if (property === 'hasPlusOne') {
+            value = e.target.checked;
+        }
+
+        newGuests[cellRow][property] = value;
 
         setGuests(newGuests);
 
     }
 
+    const handleChangeForm = e => {
+        setList({
+            ...list,
+            [e.target.name]: e.target.value,
+        });
+    }
+
     const onSubmit = async () => {
         try {
-            const guestRef = await addDoc(collection(db, 'guests'), {
-                ...guest,
-                attending: false,
-                rsvp: false,
-                vaccinated: false,
-                vaccineVerified: false,
-                vaccineImage: '',
+            // const sanitizedGuests = [...guests];
+            const sanitizedGuests = [...guests, ...additionalGuests];
+            sanitizedGuests.forEach(g => {
+                delete g.removeable; 
+                delete g.name; 
             });
-            await setDoc(doc(db, 'lists', list.id), {
-                ...list,
-                guests: [...list.guests, guestRef.id]
-            });
-
+            await updateGuestList(list, sanitizedGuests);
             handleClickChangePage('GUEST_LIST');
         }
         catch (error) {
@@ -134,20 +142,48 @@ export function EditListPage(props) {
             type: 'TEXT',
             edit: true,
         },
+        {
+            name: 'Plus One',
+            property: 'hasPlusOne',
+            type: 'BOOLEAN',
+            edit: true,
+        },
     ];
+    
+    const fields = [
+        {
+            label: 'List Name',
+            property: 'name',
+            type: 'text',
+            required: true,
+        },
+        {
+            label: 'RSVP Due Date',
+            property: 'rsvpDate',
+            type: 'date',
+            required: true,
+        },
+    ]
 
     return (
         <div className="width-80 container">
             <TitleWithButtons
-                title={`Add Guests to ${list.name}`}
-                leftButtons={[{label: '❮', onClick: () => handleClickChangePage('GUEST_LIST')}]}
-                rightButtons={[{label: 'Save', onClick: () => {}}]}
+                title={`Edit ${currentList.name}`}
+                leftButtons={[{label: Symbols.left, onClick: () => handleClickChangePage('GUEST_LIST')}]}
+                rightButtons={[{label: 'Save', onClick: onSubmit}]}
             />
+            <div className="container">
+                <Form
+                    fields={fields}
+                    data={list}
+                    onChange={handleChangeForm}
+                />
+            </div>
             <Table
                 keyPrefix="add_guests_to_list_table"
                 key="add_guests_to_list_table"
-                title={list.name}
-                rightButtons={[{label: '➕', onClick: onAddGuest}]}
+                title={currentList.name}
+                rightButtons={[{label: Symbols.plus, onClick: onAddGuest}]}
                 columns={columns}
                 data={guests}
                 handleChangeCell={handleChangeCell}

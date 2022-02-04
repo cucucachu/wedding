@@ -42,7 +42,7 @@ export function TableCell(props) {
                     <input 
                         className="cell-input-boolean"
                         type="checkbox"
-                        value={!!value}
+                        checked={!!value}
                         onChange={handleChangeCell}
                         name={column.property}
                     />

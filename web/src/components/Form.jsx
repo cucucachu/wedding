@@ -22,7 +22,9 @@ export function Form(props) {
     return (
         <form onSubmit={e => {e.preventDefault(); onSubmit(e)}}>
             {labeledInputs}
-            <input type="submit" value={submitText ? submitText : 'Submit'}/>
+            {onSubmit &&
+                <input type="submit" value={submitText ? submitText : 'Submit'}/>
+            }
         </form>
     )
 }

@@ -21,6 +21,7 @@ export function LabeledSelectInput(props) {
                 onChange={onChange} 
                 required={!!required} 
                 property={property}
+                name={property}
             >
                 {htmlOptions}
             </select>

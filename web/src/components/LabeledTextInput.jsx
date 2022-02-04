@@ -6,7 +6,14 @@ export function LabeledTextInput(props) {
     return (
         <div className='labeled-input'>
             <label>{label}</label>
-            <input type={type} value={value} onChange={onChange} required={!!required} property={property}/>
+            <input 
+                type={type} 
+                value={value} 
+                onChange={onChange} 
+                required={!!required} 
+                property={property}
+                name={property}            
+            />
         </div>
     );
 }

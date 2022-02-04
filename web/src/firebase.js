@@ -90,11 +90,19 @@ export async function getGuest({code, uid}) {
 
     for (let doc of querySnapshot.docs) {
         const guest = doc.data();
+        let name = `${guest.firstName} ${guest.lastName}`;
 
+        if (guest.additionalGuestFor && (!guest.firstName && !guest.lastName)) {
+            let qs = await getDoc(doc(`guests/${guest.additionalGuestFor}`));
+            for (let d of qs.docs) {
+                const g = d.data();
+                name = `${g.firstName} ${g.lastName}'${g.lastName[g.lastName.length - 1] === 's' ? '' : 's'} +1`;
+            }
+        }
 
         guests.push({
             id: doc.id,
-            name: `${guest.firstName} ${guest.lastName}`,
+            name: name,
             ...guest,
         });
 
@@ -114,7 +122,6 @@ export async function getGuests() {
         for (let doc of querySnapshot.docs) {
             const guest = doc.data();
 
-
             guests.push({
                 id: doc.id,
                 name: `${guest.firstName} ${guest.lastName}`,
@@ -122,6 +129,13 @@ export async function getGuests() {
             });
 
             guests.sort((a, b) => a.lastName - b.lastName);
+        }
+
+        for (let guest of guests) {
+            if (guest.additionalGuestFor && (!guest.firstName && !guest.lastName)) {
+                const g = guests.filter(g => g.id === guest.additionalGuestFor)[0];
+                guest.name = `${g.firstName} ${g.lastName}'${g.lastName[g.lastName.length - 1] === 's' ? '' : 's'} +1`;
+            }
         }
 
         return guests;
@@ -200,5 +214,20 @@ export async function deleteAccount(uid) {
             'Authorization': `Bearer ${token}`
         }
     });
+    return response.data;
+}
+
+export async function updateGuestList(list, guests) {
+    const token = await auth?.currentUser?.getIdToken(true);
+
+    const response = await firebaseFunctions.post('/updateGuestList', { list, guests }, {
+        baseURL: 'https://us-central1-wedding-1be73.cloudfunctions.net/app',
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,POST',
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
     return response.data;
 }

@@ -67,7 +67,7 @@ export function EditGuestPage(props) {
             property: 'vaccineVerified',
             type: 'checkbox',
         },
-    ]
+    ];
 
     return (
         <div className="container">

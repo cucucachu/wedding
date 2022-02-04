@@ -9,6 +9,8 @@ const fireabseApp = admin.initializeApp();
 const db = admin.firestore(fireabseApp);
 const auth = admin.auth();
 
+const { updateGuestList, ClientError } = require('./editGuestList')
+
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
 
@@ -25,14 +27,14 @@ app.use(async (request, response, next) => {
         response.body = {
             error: error.message,
         }
-        response.status = 500;
+        response.status(500);
     }
 });
 
 // Taken from https://github.com/firebase/functions-samples/blob/main/authorized-https-endpoint/functions/index.js
 // Returns decoded Id token for user if request contains a valid Auth BEARER token, or valid auth cookie.
 //  otherwise returns false;
-const authenticatedRequest = async request => {  
+const isAuthenticatedRequest = async request => {  
     if ((!request.headers.authorization || !request.headers.authorization.startsWith('Bearer ')) &&
         !(request.cookies && request.cookies.__session)) {
             // No Auth Header or Cookie
@@ -41,16 +43,15 @@ const authenticatedRequest = async request => {
     
     let idToken;
     if (request.headers.authorization && request.headers.authorization.startsWith('Bearer ')) {
-        console.log('BEARER TOKEN Found');
+        // console.log('BEARER TOKEN Found');
         // Read the ID Token from the Authorization header.
         idToken = request.headers.authorization.split('Bearer ')[1];
-        console.log(idToken);
     } else if(request.cookies) {
-        console.log('Cookie Found');
+        // console.log('Cookie Found');
         // Read the ID Token from cookie.
         idToken = request.cookies.__session;
     } else {
-        console.log('No Auth Found');
+        // console.log('No Auth Found');
       // No cookie
         return false;
     }
@@ -65,7 +66,24 @@ const authenticatedRequest = async request => {
     }
 }
 
+const isHost = async request => {
+    const idToken = await isAuthenticatedRequest(request);
+
+    if (!idToken) {
+        return false;
+    }
+
+    const host = await db.collection('hosts').where('uid', '==', idToken.uid);
+
+    if (host.empty) {
+        return false;
+    }
+    
+    return true;
+}
+
 app.post('/checkGuestCode', async (request, response) => {
+    console.log('/checkGuestCode');
     let { code } = request.body;
 
     let valid = false;
@@ -80,20 +98,62 @@ app.post('/checkGuestCode', async (request, response) => {
 });
 
 app.post('/deleteAccount',  async (request, response) => {
+    console.log('/deleteAccount');
     let { uid } = request.body;
 
-    if (await authenticatedRequest(request)) {
+    if (await isAuthenticatedRequest(request)) {
         try {
             await auth.deleteUser(uid);
             response.json({success: true, message: 'Account Deleted'});
         }
         catch (error) {
             response.json({success: false, message: error.message});
+            response.status(500);
         }
     }
     else {
-        response.status = 401;
+        response.status(401);
         response.json({error: 'Unauthenticated'});
+    }
+});
+
+app.post('/updateGuestList', async (request, response) => {
+    console.log('/updateGuestList');
+    let { list, guests } = request.body;
+
+    const allowed = await isHost(request);
+
+    // if id Token and a host
+    if (allowed) {
+        try {
+            const { updatedList, updatedGuests} = await updateGuestList(db, list, guests);
+
+            response.json({
+                success: true, 
+                message: 'List Updated', 
+                requested: { 
+                    list, 
+                    guests 
+                }, 
+                updated: {
+                    list: updatedList, 
+                    guests: updatedGuests
+                }
+            });
+        }
+        catch (error) {
+            response.json({success: false, message: error.message});
+            if (error instanceof ClientError) {
+                response.status(400);
+            }
+            else {
+                response.status(500);
+            }
+        }
+    }
+    else {
+        response.status(403);
+        response.json({error: 'Unauthorized'});
     }
 });
 

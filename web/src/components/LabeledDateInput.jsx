@@ -1,19 +1,18 @@
 import React from 'react';
 
-export function LabeledTextAreaInput(props) {
-    const { label, value, required, property, onChange } = props;
+export function LabeledDateInput(props) {
+    const { type, label, value, required, property, onChange } = props;
 
     return (
         <div className='labeled-input'>
             <label>{label}</label>
-            <textarea 
-                value={value}
+            <input 
+                type={type} 
+                value={value} 
                 onChange={onChange} 
                 required={!!required} 
                 property={property}
-                name={property}
-                rows="6"
-                cols="40"
+                name={property}            
             />
         </div>
     );

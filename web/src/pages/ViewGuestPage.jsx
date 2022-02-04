@@ -7,14 +7,14 @@ import { LabeledValue } from '../components/LabeledValue';
 import Symbols from '../components/Symbols';
 
 export function ViewGuestPage(props) {
-    const { handleClickChangePage } = props;
+    const { guest, handleClickChangePage } = props;
 
-    const [guest, setGuest] = useState(props.guest);
     const [vaccineURL, setVaccineURL] = useState('');
 
     const {
         firstName,
         lastName,
+        name,
         email,
         code,
         rsvpState,
@@ -25,14 +25,15 @@ export function ViewGuestPage(props) {
     
 
     useEffect(async () => { 
-        setVaccineURL(await getVaccineImageURL(id))
+        if (props.guest.rsvpState === 'YES')
+            setVaccineURL(await getVaccineImageURL(id))
     }, [])
 
     return (
         <div className="container">
             
             <TitleWithButtons
-                title={`${firstName} ${lastName}`}
+                title={name}
                 leftButtons={[{label: Symbols.left, onClick: () => handleClickChangePage('GUEST_LIST')}]}
                 rightButtons={[{label: Symbols.edit, onClick: () => handleClickChangePage('EDIT_GUEST', guest)}]}
             />
@@ -42,8 +43,13 @@ export function ViewGuestPage(props) {
                 <LabeledValue label="Email" value={email}/>
                 <LabeledValue label="RSVP" value={rsvpState}/>
                 <LabeledValue label="Guest Code" value={code}/>
-                <p><strong>Vaccine Image</strong></p>
-                {vaccineURL && <img src={vaccineURL}/>}
+                
+                {vaccineURL && 
+                    <div>
+                        <p><strong>Vaccine Image</strong></p>
+                        <img src={vaccineURL}/>
+                    </div>
+                }
             </div>
         </div>
     )
