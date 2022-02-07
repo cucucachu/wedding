@@ -7,7 +7,6 @@ export function RSVPStart(props) {
         <div>
             <button 
                 onClick={() => setStep('VACCINE_QUESTION')}
-
             >I Will Attend</button>
             <button 
                 onClick={handleRSVPNo}

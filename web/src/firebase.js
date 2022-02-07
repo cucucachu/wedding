@@ -2,7 +2,7 @@
 
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import { getFirestore, collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 import axios from 'axios';
@@ -83,25 +83,24 @@ export async function getGuest({code, uid}) {
     }
 
     if (querySnapshot.isEmpty) {
+        console.log(`getGuest() could not find a guest with uid ${uid} or code ${code}`);
         return null;
     }
     
     const guests = [];
 
-    for (let doc of querySnapshot.docs) {
-        const guest = doc.data();
+    for (let document of querySnapshot.docs) {
+        const guest = document.data();
         let name = `${guest.firstName} ${guest.lastName}`;
 
         if (guest.additionalGuestFor && (!guest.firstName && !guest.lastName)) {
-            let qs = await getDoc(doc(`guests/${guest.additionalGuestFor}`));
-            for (let d of qs.docs) {
-                const g = d.data();
-                name = `${g.firstName} ${g.lastName}'${g.lastName[g.lastName.length - 1] === 's' ? '' : 's'} +1`;
-            }
+            let d = await getDoc(doc(db, `guests/${guest.additionalGuestFor}`));
+            const g = d.data();
+            name = `${g.firstName} ${g.lastName}'${g.lastName[g.lastName.length - 1] === 's' ? '' : 's'} +1`;
         }
 
         guests.push({
-            id: doc.id,
+            id: document.id,
             name: name,
             ...guest,
         });

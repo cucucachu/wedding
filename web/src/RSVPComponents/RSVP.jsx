@@ -4,6 +4,7 @@ import { updateGuest, uploadImage } from '../firebase';
 
 import { Spinner } from "../components/Spinner";
 import { RSVPStart } from './RSVPStart';
+import { RSVPGuestName } from './RSVPGuestName';
 import { RSVPVaccine } from './RSVPVaccine';
 import { RSVPUpload } from './RSVPUpload';
 import { RSVPTentative } from './RSVPTentative';
@@ -25,6 +26,9 @@ export function RSVP(props) {
 
     if (rsvpState === 'YES' || rsvpState === 'NO') {
         initialStep = 'CONFIRMED';
+    }
+    else if (!guest.firstName && !guest.lastName) {
+        initialStep = 'PLUS_ONE_NAME';
     }
     else if (rsvpState === 'TENTATIVE') {
         initialStep = 'TENTATIVE';
@@ -62,6 +66,17 @@ export function RSVP(props) {
         }
     }
 
+    async function handleSetRSVPGuestName({firstName, lastName}) {
+        const updatedGuest = {...guest, firstName, lastName};
+        try {
+            await updateGuest(updatedGuest);
+            await loadGuest();
+        }
+        catch (error) {
+            setError(error.message);
+        }
+    }
+
     async function handleRSVPTentative() {
         const updatedGuest = {...guest};
         updatedGuest.rsvpState = 'TENTATIVE';
@@ -79,6 +94,11 @@ export function RSVP(props) {
             display = <RSVPStart
                 setStep={setStep}
                 handleRSVPNo={handleRSVPNo}
+            />
+            break;
+        case 'PLUS_ONE_NAME':
+            display = <RSVPGuestName
+                handleSetRSVPGuestName={handleSetRSVPGuestName}
             />
             break;
         case 'VACCINE_QUESTION':
