@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 
-import { signInWithEmailAndPassword  } from 'firebase/auth';
-import { auth } from '../firebase';
-
 import credentials from '../../login.json';
+import { loginAsGuestOrHost } from '../firebase';
 
 export function LoginPage(props) {
-    const { handleSuccessfulLoginHost } = props;
+    const { handleSuccessfulLoginHost, handleSuccessfulLoginGuest } = props;
 
     const [email, setEmail] = useState(credentials.email);
     const [password, setPassword] = useState(credentials.password);
@@ -16,21 +14,15 @@ export function LoginPage(props) {
         e.preventDefault();
         
         try {
-            const loginResponse = await signInWithEmailAndPassword(auth, email, password);
+            const { userCredential, host } = await loginAsGuestOrHost(email, password);
             setError('');
-            handleSuccessfulLoginHost(loginResponse.user);
+            if (host)
+                handleSuccessfulLoginHost(userCredential.user);
+            else
+                handleSuccessfulLoginGuest(userCredential.user)
         }
         catch (error) {
-            console.log(error.code);
-            
-            const errors = {
-                'auth/user-not-found': 'Unknown Email',
-                'auth/wrong-password': 'Wrong Password',
-            }
-
-            let errorMessage = errors[error.code] ? errors[error.code] : 'Oops, something is broked :/';
-
-            setError(errorMessage);
+            setError(error.message);
         }
     }
 

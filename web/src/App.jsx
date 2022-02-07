@@ -60,6 +60,7 @@ const App = () => {
         case 'LOGIN':
             currentPage = <LoginPage
                 handleSuccessfulLoginHost={handleSuccessfulLoginHost}
+                handleSuccessfulLoginGuest={handleSuccessfulLoginGuest}
             />;
             break;
         case 'GUEST_LIST':

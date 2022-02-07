@@ -65,6 +65,43 @@ export async function loginOrCreateGuestAccount(email, code) {
     return userCredential;
 }
 
+export async function loginAsGuestOrHost(email, password) {        
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const host = await getHost({uid: userCredential.user.uid});
+
+        return {
+            userCredential,
+            host: !!host,
+        }
+    }
+    catch (error) {        
+        const errors = {
+            'auth/user-not-found': 'Unknown Email',
+            'auth/wrong-password': 'Wrong Password',
+        }
+
+        let errorMessage = errors[error.code] ? errors[error.code] : 'Oops, something is broked :/';
+
+        throw new Error(errorMessage);
+    }
+}
+
+export async function getHost({uid}) {
+    let querySnapshot = await getDocs(query(collection(db, 'hosts'), where('uid', '==', uid)));
+
+    if (querySnapshot.isEmpty) {
+        return null;
+    }
+
+    for (let doc of querySnapshot.docs) {
+        return {
+            ...doc.data(), 
+            id: doc.id
+        };
+    }
+}
+
 
 export async function getGuest({code, uid}) {
     if (!code && !uid) {
