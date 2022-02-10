@@ -17,19 +17,6 @@ const { updateGuestList, ClientError } = require('./editGuestList')
 app.use(cors);
 app.use(cookieParser);
 
-app.use(async (request, response, next) => {
-    try {
-        await next();
-    }
-    catch(error) {
-        console.log(`Hard error: ${error.message}`);
-
-        response.body = {
-            error: error.message,
-        }
-        response.status(500);
-    }
-});
 
 // Taken from https://github.com/firebase/functions-samples/blob/main/authorized-https-endpoint/functions/index.js
 // Returns decoded Id token for user if request contains a valid Auth BEARER token, or valid auth cookie.
@@ -97,19 +84,56 @@ app.post('/checkGuestCode', async (request, response) => {
     response.json({valid});
 });
 
+app.post('/getRSVPDueDate', async (request, response) => {
+    console.log('/getRSVPDueDate');
+    let { id } = request.body;
+
+    if (!id) {
+        // throw new ClientError('/getRSVPDueDate called without a id')
+        response.status(400);
+        response.json({
+            success: false,
+            message: '/getRSVPDueDate called without a id',
+            id,
+        });
+        response.send();
+    }
+
+    const listsSnap = await db.collection('lists').where('guests', 'array-contains', id).get();
+
+    if (listsSnap.empty) {
+        // throw new ClientError(`/getRSVPDueDate called with unknown uid "${id}"`);
+        
+        response.status(400);
+        response.json({
+            success: false,
+            message: '/getRSVPDueDate couldn\'t find a guest on a list with this id',
+            id,
+        });
+        response.send();
+    }
+
+    let rsvpDate = '';
+    for (let listDoc of listsSnap.docs) {
+        rsvpDate = listDoc.data().rsvpDate;
+    }
+
+    response.json({rsvpDate});
+});
+
 app.post('/deleteAccount',  async (request, response) => {
     console.log('/deleteAccount');
     let { uid } = request.body;
 
     if (await isAuthenticatedRequest(request)) {
-        try {
+        // try {
             await auth.deleteUser(uid);
             response.json({success: true, message: 'Account Deleted'});
-        }
-        catch (error) {
-            response.json({success: false, message: error.message});
-            response.status(500);
-        }
+        // }
+        // catch (error) {
+        //     response.json({success: false, message: error.message});
+        //     response.status(500);
+        // }
     }
     else {
         response.status(401);
@@ -125,7 +149,7 @@ app.post('/updateGuestList', async (request, response) => {
 
     // if id Token and a host
     if (allowed) {
-        try {
+        // try {
             const { updatedList, updatedGuests} = await updateGuestList(db, list, guests);
 
             response.json({
@@ -140,20 +164,36 @@ app.post('/updateGuestList', async (request, response) => {
                     guests: updatedGuests
                 }
             });
-        }
-        catch (error) {
-            response.json({success: false, message: error.message});
-            if (error instanceof ClientError) {
-                response.status(400);
-            }
-            else {
-                response.status(500);
-            }
-        }
+        // }
+        // catch (error) {
+        //     response.json({success: false, message: error.message});
+        //     if (error instanceof ClientError) {
+        //         response.status(400);
+        //     }
+        //     else {
+        //         response.status(500);
+        //     }
+        // }
     }
     else {
         response.status(403);
         response.json({error: 'Unauthorized'});
+    }
+});
+
+app.use((error, request, response, next) => {
+    if (error) {
+        response.json({success: false, message: error.message});
+        
+        if (error instanceof ClientError) {
+            response.status(400);
+        }
+        else {
+            console.log(`Hard error: ${error.message}`);
+            response.status(500);
+        }
+
+        response.send();        
     }
 });
 

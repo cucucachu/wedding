@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Spinner } from "../components/Spinner";
 
-import { getGuest } from "../firebase";
+import { getGuest, getRSVPDueDate } from "../firebase";
 import { RSVP } from '../RSVPComponents/RSVP';
 
 export function GuestHomePage(props) {
     const { user } = props;
 
     const [guest, setGuest] = useState({});
+    const [rsvpDueDate, setRsvpDueDate] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
 
     useEffect(loadGuest, []);
+    useEffect(loadRSVPDueDate, [guest]);
 
     async function loadGuest() {
         try {
@@ -25,6 +27,27 @@ export function GuestHomePage(props) {
         }
     }
 
+    async function loadRSVPDueDate() {
+        console.log('loadRSVPDate()');
+        try {
+            if (guest.id) {
+                const response = await getRSVPDueDate(guest.id);
+                const rsvpDate = response.rsvpDate;
+                const rsvpClosed = (new Date()).getTime() > (new Date(rsvpDate)).getTime();
+                setRsvpDueDate({
+                    rsvpDate, 
+                    rsvpClosed,
+                });
+            }
+            else {
+                console.log('no guest id');
+            }
+        }
+        catch(error) {
+            setError(error.message);
+        }
+    }
+
     if (loading) {
         return <Spinner />
     }
@@ -35,6 +58,7 @@ export function GuestHomePage(props) {
                 <p className="error-text">{error}</p>
                 <RSVP 
                     guest={guest}
+                    rsvpDueDate={rsvpDueDate}
                     loadGuest={loadGuest}
                 ></RSVP>
             </div>

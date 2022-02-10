@@ -239,6 +239,21 @@ export async function checkGuestCode(code) {
     return response.data;
 }
 
+export async function getRSVPDueDate(id) {
+    // const token = await auth?.currentUser?.getIdToken(true);
+    const response = await firebaseFunctions.post('/getRSVPDueDate', { id });
+    
+    // const response = await firebaseFunctions.post('/getRSVPDueDate', { id }, {
+    //     baseURL: 'https://us-central1-wedding-1be73.cloudfunctions.net/app',
+    //     headers: {
+    //         'Access-Control-Allow-Origin': '*',
+    //         'Access-Control-Allow-Methods': 'GET,POST',
+    //         'Authorization': `Bearer ${token}`
+    //     }
+    // });
+    return response.data;
+}
+
 export async function deleteAccount(uid) {
     const token = await auth?.currentUser?.getIdToken(true);
 

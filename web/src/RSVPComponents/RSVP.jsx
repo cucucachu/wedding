@@ -9,14 +9,27 @@ import { RSVPVaccine } from './RSVPVaccine';
 import { RSVPUpload } from './RSVPUpload';
 import { RSVPTentative } from './RSVPTentative';
 import { RSVPConfirmed } from  './RSVPConfirmed';
+import { RSVPClosed } from './RSVPClosed';
 
 export function RSVP(props) {
     const { 
         guest,
+        rsvpDueDate,
         loadGuest,
     } = props;
 
+
     const { rsvpState } = guest;
+
+    if (rsvpDueDate && rsvpDueDate.rsvpClosed) {
+        return (
+            <div>
+                <hr/>
+                <h3 className="center-text">RSVP</h3>
+                <RSVPClosed rsvpState={rsvpState}/>
+            </div>
+        )
+    }
 
     const [error, setError] = useState('');
 
@@ -92,6 +105,7 @@ export function RSVP(props) {
     switch(step) {
         case 'YES_OR_NO':
             display = <RSVPStart
+                rsvpDueDate={rsvpDueDate}
                 setStep={setStep}
                 handleRSVPNo={handleRSVPNo}
             />
@@ -121,6 +135,7 @@ export function RSVP(props) {
             break;
         case 'TENTATIVE':
             display = <RSVPTentative 
+                rsvpDueDate={rsvpDueDate}
                 setStep={setStep}
             />
             break;

@@ -82,7 +82,8 @@ export function EditListPage(props) {
                 delete g.removeable; 
                 delete g.name; 
             });
-            await updateGuestList(list, sanitizedGuests);
+            const sanitizedList = {...list};
+            await updateGuestList(sanitizedList, sanitizedGuests);
             handleClickChangePage('GUEST_LIST');
         }
         catch (error) {
