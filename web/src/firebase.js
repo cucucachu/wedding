@@ -129,16 +129,22 @@ export async function getGuest({code, uid}) {
     for (let document of querySnapshot.docs) {
         const guest = document.data();
         let name = `${guest.firstName} ${guest.lastName}`;
+        let plusOneForName = undefined;
 
         if (guest.additionalGuestFor && (!guest.firstName && !guest.lastName)) {
             let d = await getDoc(doc(db, `guests/${guest.additionalGuestFor}`));
             const g = d.data();
-            name = `${g.firstName} ${g.lastName}'${g.lastName[g.lastName.length - 1] === 's' ? '' : 's'} +1`;
+            plusOneForName = `${g.firstName} ${g.lastName}`;
+
+            if (!guest.firstName && !guest.lastName) {
+                name = `${g.firstName} ${g.lastName}'${g.lastName[g.lastName.length - 1] === 's' ? '' : 's'} +1`;
+            }
         }
 
         guests.push({
             id: document.id,
             name: name,
+            plusOneForName,
             ...guest,
         });
 
@@ -168,9 +174,12 @@ export async function getGuests() {
         }
 
         for (let guest of guests) {
-            if (guest.additionalGuestFor && (!guest.firstName && !guest.lastName)) {
+            if (guest.additionalGuestFor) {
                 const g = guests.filter(g => g.id === guest.additionalGuestFor)[0];
-                guest.name = `${g.firstName} ${g.lastName}'${g.lastName[g.lastName.length - 1] === 's' ? '' : 's'} +1`;
+                guest.plusOneForName = `${g.firstName} ${g.lastName}`;
+                if (!guest.firstName && !guest.lastName) {
+                    guest.name = `${g.firstName} ${g.lastName}'${g.lastName[g.lastName.length - 1] === 's' ? '' : 's'} +1`;
+                }
             }
         }
 

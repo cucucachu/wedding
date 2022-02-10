@@ -15,14 +15,18 @@ export function ViewGuestPage(props) {
         firstName,
         lastName,
         name,
+        plusOneForName,
         email,
         code,
         rsvpState,
-        rsvpDate,
+        address,
+        city,
+        state,
+        zip,
         id,
     } = guest;
 
-    
+    const addressString = address ? `${address} ${city}, ${state} ${zip}` : '';
 
     useEffect(async () => { 
         if (props.guest.rsvpState === 'YES')
@@ -40,9 +44,11 @@ export function ViewGuestPage(props) {
             <div className="info-container">
                 <LabeledValue label="First Name" value={firstName}/>
                 <LabeledValue label="Last Name" value={lastName}/>
-                <LabeledValue label="Email" value={email}/>
-                <LabeledValue label="RSVP" value={rsvpState}/>
                 <LabeledValue label="Guest Code" value={code}/>
+                <LabeledValue label="Plus One For" value={plusOneForName} doNotShowIfEmpty={true}/>
+                <LabeledValue label="Email" value={email} doNotShowIfEmpty={true}/>
+                <LabeledValue label="Address" value = {addressString} doNotShowIfEmpty={true}/>
+                <LabeledValue label="RSVP" value={rsvpState}/>
                 
                 {vaccineURL && 
                     <div>

@@ -29,30 +29,30 @@ export function GuestListPage(props) {
             case 'view':
                 handleClickChangePage('VIEW_GUEST', guests.filter(g => g.id === id)[0]);
                 break;
-            case 'moveUp':
-                currentList = lists.filter(l => l.guests.filter(g => g === id).length)[0];
-                currentListIndex = lists.indexOf(currentList);
-                if (currentListIndex > 0) {
-                    currentList.guests.splice(cellRow, 1);
-                    newList = lists[currentListIndex - 1];
-                    newList.guests.push(id);
-                    await updateList(currentList);
-                    await updateList(newList);
-                    setLists(await getLists());
-                }
-                break;
-            case 'moveDown':
-                currentList = lists.filter(l => l.guests.filter(g => g === id).length)[0];
-                currentListIndex = lists.indexOf(currentList);
-                if (currentListIndex < lists.length - 1) {
-                    currentList.guests.splice(cellRow, 1);
-                    newList = lists[currentListIndex + 1];
-                    newList.guests.push(id);
-                    await updateList(currentList);
-                    await updateList(newList);
-                    setLists(await getLists());
-                }
-                break;
+            // case 'moveUp':
+            //     currentList = lists.filter(l => l.guests.filter(g => g === id).length)[0];
+            //     currentListIndex = lists.indexOf(currentList);
+            //     if (currentListIndex > 0) {
+            //         currentList.guests.splice(cellRow, 1);
+            //         newList = lists[currentListIndex - 1];
+            //         newList.guests.push(id);
+            //         await updateList(currentList);
+            //         await updateList(newList);
+            //         setLists(await getLists());
+            //     }
+            //     break;
+            // case 'moveDown':
+            //     currentList = lists.filter(l => l.guests.filter(g => g === id).length)[0];
+            //     currentListIndex = lists.indexOf(currentList);
+            //     if (currentListIndex < lists.length - 1) {
+            //         currentList.guests.splice(cellRow, 1);
+            //         newList = lists[currentListIndex + 1];
+            //         newList.guests.push(id);
+            //         await updateList(currentList);
+            //         await updateList(newList);
+            //         setLists(await getLists());
+            //     }
+            //     break;
         }
     }
 
@@ -72,17 +72,17 @@ export function GuestListPage(props) {
                     buttonText: Symbols.view,
 
                 },
-                {
-                    property: 'moveUp',
-                    onClick: handleClickCell,
-                    buttonText: Symbols.up,
+                // {
+                //     property: 'moveUp',
+                //     onClick: handleClickCell,
+                //     buttonText: Symbols.up,
 
-                },
-                {
-                    property: 'moveDown',
-                    onClick: handleClickCell,
-                    buttonText: Symbols.down,
-                }
+                // },
+                // {
+                //     property: 'moveDown',
+                //     onClick: handleClickCell,
+                //     buttonText: Symbols.down,
+                // }
             ]
         },
         {

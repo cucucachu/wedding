@@ -67,6 +67,26 @@ export function EditGuestPage(props) {
             property: 'vaccineVerified',
             type: 'checkbox',
         },
+        {
+            label: 'Address',
+            property: 'address',
+            type: 'text',
+        },
+        {
+            label: 'City',
+            property: 'city',
+            type: 'text',
+        },
+        {
+            label: 'State',
+            property: 'state',
+            type: 'text',
+        },
+        {
+            label: 'Zip',
+            property: 'zip',
+            type: 'text',
+        },
     ];
 
     return (

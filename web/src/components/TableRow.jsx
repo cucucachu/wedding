@@ -9,17 +9,23 @@ export function TableRow(props) {
         columns, 
         handleChangeCell,
         keyPrefix,
+        isMobile,
     } = props;
 
-    const cells = columns.map(column => 
-        <TableCell 
-            key={`${keyPrefix}-cell-${column.property}`}
-            value={data[column.property]}
-            rowIndex={rowIndex}
-            column={column}
-            handleChangeCell={handleChangeCell}
-        />
-    )
+    const cells = columns.map(column => {
+        if (!column.doNotShowOnMobile || !isMobile) {
+            return (
+                <TableCell 
+                    key={`${keyPrefix}-cell-${column.property}`}
+                    value={data[column.property]}
+                    rowIndex={rowIndex}
+                    column={column}
+                    handleChangeCell={handleChangeCell}
+                />
+            )
+        }
+        else return null;
+    })
 
     return (
         <tr rowid={data.id}>

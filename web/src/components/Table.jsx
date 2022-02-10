@@ -12,8 +12,15 @@ export function Table(props) {
         leftButtons,
         rightButtons,
     } = props;
+    
+    const isMobile = window.matchMedia("only screen and (max-width: 500px)").matches;
 
-    const tableHeaders = columns.map((c, i) => <th key={`${keyPrefix}-header-${i}${c.name}`}>{c.name}</th>)
+    const tableHeaders = columns.map((c, i) => {
+        if (!c.doNotShowOnMobile || !isMobile) {
+            return <th key={`${keyPrefix}-header-${i}${c.name}`}>{c.name}</th>
+        }
+        else return null;
+    })
 
     const rows = data.map((row, rowIndex) => 
         <TableRow
@@ -23,6 +30,7 @@ export function Table(props) {
             rowIndex={rowIndex}
             columns={columns}
             handleChangeCell={handleChangeCell}
+            isMobile={isMobile}
         />
     )
 

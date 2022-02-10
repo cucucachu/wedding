@@ -4,7 +4,11 @@ import { LabeledTextValue } from './LabeledTextValue';
 import { LabeledCheckboxValue } from './LabeledCheckboxValue';
 
 export function LabeledValue(props) {
-    const { value } = props;
+    const { value, doNotShowIfEmpty } = props;
+
+    if (doNotShowIfEmpty && !value) {
+        return null;
+    }
 
     let display = '';
 

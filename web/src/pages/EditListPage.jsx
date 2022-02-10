@@ -93,13 +93,6 @@ export function EditListPage(props) {
 
     const columns = [
         {
-            type: 'BUTTON',
-            property: 'removeable',
-            onClick: onRemoveGuest,
-            buttonText: Symbols.x,
-            showOnlyIfValue: true,
-        },
-        {
             name: 'First Name',
             property: 'firstName',
             type: 'TEXT',
@@ -118,36 +111,48 @@ export function EditListPage(props) {
             property: 'email',
             type: 'EMAIL',
             edit: true,
+            doNotShowOnMobile: true,
         },
         {
             name: 'Address',
             property: 'address',
             type: 'TEXT',
             edit: true,
+            doNotShowOnMobile: true,
         },
         {
             name: 'City',
             property: 'city',
             type: 'TEXT',
             edit: true,
+            doNotShowOnMobile: true,
         },
         {
             name: 'State',
             property: 'state',
             type: 'TEXT',
             edit: true,
+            doNotShowOnMobile: true,
         },
         {
             name: 'Zip',
             property: 'zip',
             type: 'TEXT',
             edit: true,
+            doNotShowOnMobile: true,
         },
         {
             name: 'Plus One',
             property: 'hasPlusOne',
             type: 'BOOLEAN',
             edit: true,
+        },
+        {
+            type: 'BUTTON',
+            property: 'removeable',
+            onClick: onRemoveGuest,
+            buttonText: Symbols.x,
+            showOnlyIfValue: true,
         },
     ];
     
