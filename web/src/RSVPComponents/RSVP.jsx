@@ -31,6 +31,7 @@ export function RSVP(props) {
         )
     }
 
+    const [uploading, setUploading] = useState(false);
     const [error, setError] = useState('');
 
     let display;
@@ -63,6 +64,7 @@ export function RSVP(props) {
 
     async function handleRSVPYes(image) {
         if (image) {
+            setUploading(true);
             const updatedGuest = {...guest};
             try {
                 await uploadImage(`/vaccineImages/${guest.id}`, image);
@@ -71,6 +73,7 @@ export function RSVP(props) {
                 await loadGuest();
             }
             catch (error) {
+                setUploading(false);
                 setError(error.message);
             }
         }
@@ -125,6 +128,7 @@ export function RSVP(props) {
         case 'UPLOAD':
             display = <RSVPUpload
                 handleRSVPYes={handleRSVPYes}
+                uploading={uploading}
             />
             break;
         case 'CONFIRMED':

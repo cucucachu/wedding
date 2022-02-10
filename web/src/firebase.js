@@ -25,6 +25,14 @@ const firebaseFunctions = axios.create({
 
 export const logout = () => auth.signOut();
 
+function removeUndefinedFields(object) {
+    for (let key in object) {
+        if (object[key] === undefined) {
+            delete object[key];
+        }
+    }
+}
+
 export async function loginOrCreateGuestAccount(email, code) {
     let userCredential;
 
@@ -194,6 +202,7 @@ export async function updateGuest(guest) {
     const id = guest.id;
     delete guest.id;
     delete guest.name;
+    removeUndefinedFields(guest);
 
     return setDoc(doc(db, 'guests', id), guest);
 }

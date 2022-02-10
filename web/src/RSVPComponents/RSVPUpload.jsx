@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 
+import { Spinner } from '../components/Spinner';
+
 export function RSVPUpload(props) {
-    const { handleRSVPYes } = props;
+    const { handleRSVPYes, uploading } = props;
 
     const [file, setFile] = useState(null);
     const [url, setURL] = useState(null);
@@ -17,9 +19,13 @@ export function RSVPUpload(props) {
             <p>If you don't have a picture handy, you can leave and come back later.</p>
             <img src={url}/>
             <input type='file' accept='image/*' onChange={handleChangeFile}/>
-            <button 
-                onClick={() => handleRSVPYes(file)}
-            >Upload</button>
+            {uploading ? 
+                <Spinner/> 
+                :
+                <button 
+                    onClick={() => handleRSVPYes(file)}
+                >Upload</button>
+            }
         </div>
     )
 }
