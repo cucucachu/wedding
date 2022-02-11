@@ -65,6 +65,9 @@ export function TableCell(props) {
             case 'TEXT':
                 cellContents = value;
                 break;
+            case 'NUMBER':
+                cellContents = value;
+                break;
             case 'BOOLEAN':
                 cellContents = <Checkbox checked={value}/>; 
                 break;

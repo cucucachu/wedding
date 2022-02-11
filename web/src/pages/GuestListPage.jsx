@@ -13,9 +13,29 @@ export function GuestListPage(props) {
 
     const [guests, setGuests] = useState([]);
     const [lists, setLists] = useState([]);
+    const [aggregateData, setaggregateData] = useState([]);
 
     useEffect(async () => setGuests(await getGuests()), []);
     useEffect(async () => setLists(await getLists()), []);
+    useEffect(listAggregation, [guests, lists]);
+
+    function listAggregation() {
+        const aggData = [];
+
+        for (const list of lists) {
+            const guestsForList = guests.filter(g => list.guests.includes(g.id));
+
+            aggData.push({
+                name: list.name,
+                totalGuests: list.guests.length,
+                guestsAttending: guestsForList.filter(g => g.rsvpState === 'YES').length,
+                guestsTentative: guestsForList.filter(g => g.rsvpState === 'TENTATIVE').length,
+                guestsNotAttending: guestsForList.filter(g => g.rsvpState === 'NO').length,
+            });
+        }
+
+        setaggregateData(aggData);
+    }
 
     const handleClickCell = async e => {
         e.preventDefault();
@@ -29,30 +49,6 @@ export function GuestListPage(props) {
             case 'view':
                 handleClickChangePage('VIEW_GUEST', guests.filter(g => g.id === id)[0]);
                 break;
-            // case 'moveUp':
-            //     currentList = lists.filter(l => l.guests.filter(g => g === id).length)[0];
-            //     currentListIndex = lists.indexOf(currentList);
-            //     if (currentListIndex > 0) {
-            //         currentList.guests.splice(cellRow, 1);
-            //         newList = lists[currentListIndex - 1];
-            //         newList.guests.push(id);
-            //         await updateList(currentList);
-            //         await updateList(newList);
-            //         setLists(await getLists());
-            //     }
-            //     break;
-            // case 'moveDown':
-            //     currentList = lists.filter(l => l.guests.filter(g => g === id).length)[0];
-            //     currentListIndex = lists.indexOf(currentList);
-            //     if (currentListIndex < lists.length - 1) {
-            //         currentList.guests.splice(cellRow, 1);
-            //         newList = lists[currentListIndex + 1];
-            //         newList.guests.push(id);
-            //         await updateList(currentList);
-            //         await updateList(newList);
-            //         setLists(await getLists());
-            //     }
-            //     break;
         }
     }
 
@@ -61,7 +57,35 @@ export function GuestListPage(props) {
         handleClickChangePage('EDIT_LIST', {list, currentGuests: guestsForList})
     }
 
-    const columns = [
+    const aggregateColumns = [
+        {
+            name: 'List',
+            type: 'TEXT',
+            property: 'name',
+        },
+        {
+            name: 'Total',
+            type: 'NUMBER',
+            property: 'totalGuests',
+        },
+        {
+            name: 'Yes',
+            type: 'NUMBER',
+            property: 'guestsAttending',
+        },
+        {
+            name: 'No',
+            type: 'NUMBER',
+            property: 'guestsNotAttending',
+        },
+        {
+            name: 'Maybe',
+            type: 'NUMBER',
+            property: 'guestsTentative',
+        },
+    ];
+
+    const listDatacolumns = [
         {
             name: '',
             type: 'BUTTONS',
@@ -72,17 +96,6 @@ export function GuestListPage(props) {
                     buttonText: Symbols.view,
 
                 },
-                // {
-                //     property: 'moveUp',
-                //     onClick: handleClickCell,
-                //     buttonText: Symbols.up,
-
-                // },
-                // {
-                //     property: 'moveDown',
-                //     onClick: handleClickCell,
-                //     buttonText: Symbols.down,
-                // }
             ]
         },
         {
@@ -103,16 +116,22 @@ export function GuestListPage(props) {
             key={`key-table-${list.name.replace(' ', '-')}`}
             title={list.name}
             rightButtons={[{label: Symbols.edit, onClick: () => handleClickEditList(list)}]}
-            columns={columns}
-            data={guests.filter(g => list.guests.includes(g.id))}
+            columns={listDatacolumns}
+            data={guests.filter(g => list.guests.includes(g.id)).sort((a, b) => a.name.localeCompare(b.name))}
         />
     )
     
     return (
         <div className='width-80 container'>
             <TitleWithButtons
-                title="Guest List"
+                title="Guest Lists"
                 rightButtons={[{label: Symbols.plus, onClick: () => handleClickChangePage('ADD_LIST', lists)}]}
+            />
+            <Table
+                keyPrefix={`key-aggregate-table`}
+                key={`key-aggregate-table`}
+                columns={aggregateColumns}
+                data={aggregateData}
             />
             {tables}
         </div>
