@@ -57,6 +57,17 @@ export function GuestListPage(props) {
         handleClickChangePage('EDIT_LIST', {list, currentGuests: guestsForList})
     }
 
+    const handleClickDownloadList = list => {
+
+        const guestsForList =  guests.filter(g => list.guests.includes(g.id));
+        const csvString = guestsForList.reduce((prev, g) => {
+            return `${prev}\r\n${g.name},${`${g.address} ${g.city} ${g.state} ${g.zip}`.trim()},${g.rsvpState},${g.code}`;
+        }, 'data:text/csv;charset=utf-8,name,address,rsvp,code')
+            .replaceAll('undefined', '')
+            .replaceAll(',   ,', ',,');
+        window.location.assign(encodeURI(csvString));
+    }
+
     const aggregateColumns = [
         {
             name: 'List',
@@ -116,6 +127,10 @@ export function GuestListPage(props) {
             key={`key-table-${list.name.replace(' ', '-')}`}
             title={list.name}
             rightButtons={[{label: Symbols.edit, onClick: () => handleClickEditList(list)}]}
+            leftButtons={[{
+                label: 'csv',
+                onClick: () => handleClickDownloadList(list),
+            }]}
             columns={listDatacolumns}
             data={guests.filter(g => list.guests.includes(g.id)).sort((a, b) => a.name.localeCompare(b.name))}
         />
