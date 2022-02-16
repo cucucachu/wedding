@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
-import credentials from '../../login.json';
+// import credentials from '../../login.json';
 import { loginAsGuestOrHost } from '../firebase';
 
 export function LoginPage(props) {
     const { handleSuccessfulLoginHost, handleSuccessfulLoginGuest } = props;
 
-    const [email, setEmail] = useState(credentials.email);
-    const [password, setPassword] = useState(credentials.password);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
     const attemptLogin = async (e) => {
