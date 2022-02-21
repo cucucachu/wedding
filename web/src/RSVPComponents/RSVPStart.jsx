@@ -6,7 +6,7 @@ export function RSVPStart(props) {
     const { setStep, handleRSVPNo, rsvpDueDate} = props;
 
     return (
-        <div>
+        <div className="form-container">
             <RSVPDueDate rsvpDueDate={rsvpDueDate}/>
             <button 
                 onClick={() => setStep('VACCINE_QUESTION')}

@@ -11,7 +11,7 @@ export function Navbar(props) {
             <button className="nav-item" onClick={() => handleClickChangePage('COVID_POLICY')}>Covid Policy</button>
             <button className="nav-item" onClick={() => handleClickChangePage('ACCOMODATIONS')}>Accomodations</button>
             <button className="nav-item" onClick={() => handleClickChangePage('GIFTS')}>Gifts</button>
-            <button className="nav-item" onClick={() => handleClickChangePage('GUEST_EMAIL')}>RSVP</button>
+            <button className="nav-item" onClick={() => handleClickChangePage('GUEST_CODE')}>RSVP</button>
         </div>
     )
 }

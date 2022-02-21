@@ -40,10 +40,10 @@ export async function loginOrCreateGuestAccount(email, code) {
         userCredential = await signInWithEmailAndPassword(auth, email, code);
         console.log('sign in succesful');
         const guest = await getGuest({code});
-        if (guest.uid !== userCredential.user.uid || guest.email !== email) {
+        if (guest.uid !== userCredential.user.uid) {
             await deleteAccount(userCredential.user.uid);
             await logout();
-            const error = new Error('Account email is different than guest email.')
+            const error = new Error('Guest Code already used.')
             error.code = 1;
             throw error;
         }
@@ -55,14 +55,14 @@ export async function loginOrCreateGuestAccount(email, code) {
 
             const guest = await getGuest({code});
 
-            if (guest.uid) {
-                await deleteAccount(userCredential.user.uid);
-                await logout();
-                throw new Error('An account already exists for this guest code, but the email given doesn\'t match.');
-            }
+            // if (guest.uid) {
+            //     await deleteAccount(userCredential.user.uid);
+            //     await logout();
+            //     throw new Error('An account already exists for this guest code, but the email given doesn\'t match.');
+            // }
             
             guest.uid = userCredential.user.uid;
-            guest.email = email;
+            // guest.email = email;
             await updateGuest(guest);
         }
         else if (error.code === 1) {

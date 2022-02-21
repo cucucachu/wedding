@@ -34,7 +34,7 @@ export function AddListPage(props) {
     }
 
     return (
-        <div className="container">
+        <div className="form-container">
             <TitleWithButtons
                 title="Add List"
                 leftButtons={[{label: '❮', onClick: () => handleClickChangePage('GUEST_LIST')}]}

@@ -7,7 +7,7 @@ import { Form } from '../components/Form';
 import { Spinner } from '../components/Spinner';
 
 export function GuestCodePage(props) {
-    const { handleClickChangePage, handleSuccessfulLoginGuest, email } = props;
+    const { handleSuccessfulLoginGuest } = props;
 
     const [code, setCode] = useState('');
     const [error, setError] = useState(' ');
@@ -33,7 +33,7 @@ export function GuestCodePage(props) {
 
             if (valid) {
                 setError(' ');
-                const userCredential = await loginOrCreateGuestAccount(email, code);
+                const userCredential = await loginOrCreateGuestAccount(`${code.toLocaleLowerCase()}@zoelovescody.com`, code);
                 console.log('done with firebase');
                 await handleSuccessfulLoginGuest(userCredential.user);
             }
@@ -52,7 +52,6 @@ export function GuestCodePage(props) {
     return (
         <div className='form-container'>
             <TitleWithButtons
-                leftButtons={[{label: '❮', onClick: () => handleClickChangePage('GUEST_EMAIL')}]}
                 title="RSVP"
             />
             {loading ? <Spinner/> :

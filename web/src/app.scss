@@ -92,7 +92,8 @@ form {
     .labeled-input {
         width: 100%;
         margin: 1rem 0;
-
+        text-align: left;
+        
         label {
             display: block;
             margin-bottom: 8px;
@@ -265,6 +266,14 @@ footer {
 .form-container {
     margin: 4rem auto;
     width: $desktop-width;
+    text-align: center;
+
+    button {
+        width: 80%;
+        margin-left: 10%;
+        margin-right: 10%;
+        max-width: inherit;
+    }
 }
 
 .table-container {

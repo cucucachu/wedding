@@ -127,25 +127,25 @@ const App = () => {
                 handleClickChangePage={handleClickChangePage}
             />
             break;
-        case 'RSVP':
-            currentPage = <RSVPPage
-                handleClickChangePage={handleClickChangePage}
-            />
-            break;
-        case 'RSVP_NO':
-            currentPage = <RSVPNoPage
-                guest={pageProps}
-                handleClickChangePage={handleClickChangePage}
-            />
-            break;
-        case 'RSVP_NO_COMPLETE':
-            currentPage = <RSVPNoCompletePage/>
-            break;
-        case 'GUEST_EMAIL':
-            currentPage = <GuestEmailPage
-                handleClickChangePage={handleClickChangePage}
-            />
-            break;
+        // case 'RSVP':
+        //     currentPage = <RSVPPage
+        //         handleClickChangePage={handleClickChangePage}
+        //     />
+        //     break;
+        // case 'RSVP_NO':
+        //     currentPage = <RSVPNoPage
+        //         guest={pageProps}
+        //         handleClickChangePage={handleClickChangePage}
+        //     />
+        //     break;
+        // case 'RSVP_NO_COMPLETE':
+        //     currentPage = <RSVPNoCompletePage/>
+        //     break;
+        // case 'GUEST_EMAIL':
+        //     currentPage = <GuestEmailPage
+        //         handleClickChangePage={handleClickChangePage}
+        //     />
+        //     break;
         case 'GUEST_CODE':
             currentPage = <GuestCodePage
                 handleClickChangePage={handleClickChangePage}
