@@ -26,7 +26,7 @@ export function GuestEmailPage(props) {
     
 
     return (
-        <div className='container'>
+        <div className='form-container'>
             <TitleWithButtons
                 leftButtons={[{label: '❮', onClick: () => handleClickChangePage('HOME')}]}
                 title="RSVP"

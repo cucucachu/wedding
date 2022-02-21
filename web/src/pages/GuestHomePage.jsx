@@ -53,7 +53,7 @@ export function GuestHomePage(props) {
     }
     else {
         return (
-            <div className="container">
+            <div className="form-container">
                 <h2 className="center-text">{guest.name}</h2>
                 <p className="error-text">{error}</p>
                 <RSVP 

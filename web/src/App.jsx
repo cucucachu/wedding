@@ -7,8 +7,15 @@ import { logout } from './firebase';
 
 import { Navbar } from './components/Navbar';
 import { Header } from './components/Header';
+import { Footer } from './components/Footer';
 
 import { HomePage } from './pages/HomePage';
+import { EventInformationPage } from './pages/EventInformationPage';
+import { ProgramPage } from './pages/ProgramPage';
+import { CovidPolicyPage } from './pages/CovidPolicyPage';
+import { AccomodationsPage } from './pages/AccomodationsPage';
+import { GiftsPage } from './pages/GiftsPage';
+
 import { LoginPage } from './pages/LoginPage';
 import { GuestListPage } from './pages/GuestListPage';
 import { ViewGuestPage } from './pages/ViewGuestPage';
@@ -19,6 +26,7 @@ import { EditListPage } from './pages/EditListPage';
 import { GuestEmailPage } from './pages/GuestEmailPage';
 import { GuestCodePage } from './pages/GuestCodePage';
 import { GuestHomePage } from './pages/GuestHomePage';
+
 
 const pages = ['HOME', 'LOGIN'];
 
@@ -57,6 +65,26 @@ const App = () => {
                 handleClickChangePage={handleClickChangePage}
             />;
             break;
+        case 'EVENT_INFORMATION':
+            currentPage = <EventInformationPage />;
+            break;
+        case 'PROGRAM':
+            currentPage = <ProgramPage />;
+            break;
+        case 'COVID_POLICY':
+            currentPage = <CovidPolicyPage />;
+            break;
+        case 'ACCOMODATIONS':
+            currentPage = <AccomodationsPage />;
+            break;
+        case 'GIFTS':
+            currentPage = <GiftsPage />;
+            break;
+
+
+
+
+
         case 'LOGIN':
             currentPage = <LoginPage
                 handleSuccessfulLoginHost={handleSuccessfulLoginHost}
@@ -137,14 +165,14 @@ const App = () => {
 
     return (
         <div className="page-container">
-            <Navbar
-                loggedIn={user !== null}
-                onClickLogin={() => setPage('LOGIN')}
-                onClickLogout={handleClickLogout}
-            />
             <Header handleClickChangePage={handleClickChangePage}/>
-            <hr/>
-            {currentPage}
+            <Navbar
+                handleClickChangePage={handleClickChangePage}
+            />
+            <div className="page-content">
+                {currentPage}
+            </div>
+            <Footer />
         </div>
     )
 }

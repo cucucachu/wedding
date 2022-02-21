@@ -1,12 +1,15 @@
-$page-background-color: #d3d3d3;
+$page-background-color: #ffffff;
 $primary-color: #333333;
+$black: #000000;
 $emerald: #046307;
 $dark-green: #046307;
 $gold: #FFD700;
-$button-color: #e8e4e4;
+$button-color: #efefef;
 
-$header-font: 'The Nautigal', cursive;
-$paragraph-font: 'Crimson Pro', serif;
+// $header-font: 'The Nautigal', cursive;
+// $paragraph-font: 'Crimson Pro', serif;
+$header-font: 'Spectral', serif;
+$paragraph-font: 'Spectral', serif;
 /* Using SCSS variables to store breakpoints */
 $breakpoint-tablet: 768px;
 $breakpoint-phone: 500px;
@@ -28,29 +31,53 @@ body {
 }
 
 h1 {
-    color: $emerald;
+    color: $black;
     font-family: $header-font;
-    font-size: 4rem;
-    margin: 0;
+    font-size: 56px;
+    line-height: 1;
+    font-weight: normal;
+    letter-spacing: 3px;
+    margin: 36px 0;
+    text-align: center;
+    text-transform: uppercase;
 }
 
 h2 {
-    font-size: 2rem;
-    margin-top: 0;
+    color: $black;
+    font-family: $header-font;
+    font-size: 32px;
+    line-height: 1;
+    font-weight: normal;
+    letter-spacing: 3px;
+    margin: 16px 0;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+h3 {
+    color: $black;
+    font-family: $header-font;
+    font-size: 20px;
+    line-height: 1;
+    font-weight: normal;
+    letter-spacing: 3px;
+    margin: 8px 0;
+    text-align: center;
+    text-transform: uppercase;
 }
 
 p {
-    color: $emerald;
-    font-size: 1.1rem;
-    font-weight: bold;
+    color: $black;
+    font-size: 1rem;
 }
 
 button {
-    margin: 2rem 0;
+    margin: 2rem auto;
     padding: .5rem 1rem;
     width: 100%;
-    color: $emerald;
-    border-color: $emerald;
+    max-width: 250px;
+    color: $black;
+    border-color: $black;
     border-radius: 1rem;
     font-weight: bold;
     background-color: $button-color;
@@ -78,8 +105,8 @@ form {
             height: 24px;
             padding: 4px;
             border-radius: 4px;
-            border-color: $emerald;
-            color: $emerald;
+            border-color: $black;
+            color: $black;
         }
     
         select {
@@ -87,8 +114,8 @@ form {
             width: 100%;
             height: 32px;
             border-radius: 4px;
-            border-color: $emerald;
-            color: $emerald;
+            border-color: $black;
+            color: $black;
         }
     }
 
@@ -117,8 +144,8 @@ form {
         margin: 1rem 0;
         padding: .5rem 1rem;
         width: 100%;
-        color: $emerald;
-        border-color: $emerald;
+        color: $black;
+        border-color: $black;
         border-radius: 1rem;
         font-weight: bold;
         background-color: $button-color;
@@ -128,7 +155,7 @@ form {
     textarea {
         padding: 8px;
         width: calc(100% - 16px);
-        color: $emerald;
+        color: $black;
         font-weight: bold;
         background-color: #f5f5f5;
         height: 200px;
@@ -181,7 +208,7 @@ table {
 
 hr {
     width: 80%;
-    color: $emerald;
+    color: $black;
 }
 
 img {
@@ -189,15 +216,17 @@ img {
     max-width:100%;
     width: auto;
     height: auto;
-    margin-bottom: 8px;
+}
+
+footer {
 }
 
 .page-container {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    height: 100vh;
-    max-width: 1000px;
+    min-height: 100vh;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -206,10 +235,15 @@ img {
 }
 
 .container {
-    margin: $desktop-margin auto;
-    width: $desktop-width;
+    margin: 1rem auto;
+    width: 100%;
+    max-width: 1200px;
 }
 
+.width-50 {
+    margin: 0 auto;
+    width: 50%;
+}
 
 .form-container {
     margin: 4rem auto;
@@ -228,13 +262,113 @@ img {
 
 .nav {
     display: flex;
-    flex-direction: row-reverse;
+    flex-flow: row wrap;
+    justify-content: center;
+    margin: 36px 0;
+
+    .nav-item { 
+        width: auto;
+        margin: 0;
+        font-size: 16px;
+        font-weight: 500;
+        font-family: $paragraph-font;
+        letter-spacing: 2px;
+        line-height: 1;
+        padding: 8px 8px 6px;
+        border: none;
+        background-color: transparent;
+        transition: all 0.3s;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.accomodations {
+    margin: 128px auto;
+    text-align: center;
+
+    width: 80%;
+
+    h3 {
+        margin: 32px auto;
+    }
+
+    img {
+        margin: 0 auto;
+    }
+
+    p {
+        max-width: 600px;
+        margin: 16px auto;
+    }
+
+    a {
+        font-size: 24px;
+        font-weight: 500;
+        text-decoration: none;
+        border: solid 1px black;
+        padding: 4px 8px;
+        border-radius: 8px 8px;
+        background-color: $emerald;
+        color: white;
+        
+    }
+
+
+}
+
+.couple-pic {
     width: 100%;
+    height: 600px;
+    object-fit: cover;
+    object-position: 0 -580px;
+}
+
+
+.floral-header {
+    display: block;
+    max-width: 800px;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+}
+
+.floral-footer {
+    display: block;
+    max-width: 400px;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+}
+
+.attribution {
+    font-size: 12px;
+    font-weight: 200;
+    margin: 0;
+    text-align: center;
+}
+
+.stone-tree-image {
+    display: block;
+    max-width: 500px;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+}
+
+.stone-tree-image-div {
+    display: block;
+    max-width: 500px;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
 }
 
 .spinner {
     border: 4px solid white; 
-    border-top: 4px solid $emerald; 
+    border-top: 4px solid $black; 
     border-radius: 50%;
     width: 18px;
     height: 18px;
@@ -269,6 +403,25 @@ img {
     margin: 2rem auto;
 }
 
+.info-group {
+    margin: 16px 0;
+
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: $black;
+    }
+    p {
+        display: block;
+        font-weight: 400;
+        margin: 0;
+    }
+}
+
+.tour-video {
+    margin-bottom: 128px;
+}
 
 .labeled-value {
     width: 100%;
@@ -328,13 +481,13 @@ img {
     height: 20px;
     width: 20px;
     background: #fff;
-    border: 2px $emerald solid;
+    border: 2px $black solid;
     margin-right: 4px;
 }
 
 .checkbox--active {
-    border-color: $emerald;
-    background: $emerald;
+    border-color: $black;
+    background: $black;
 }
 
 .error-text {
@@ -386,6 +539,17 @@ img {
     
     .info-container {
         width: $phone-width;
+    }
+    
+
+    .nav {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: column;
+
+        .nav-item {
+
+        }
     }
 
 }
