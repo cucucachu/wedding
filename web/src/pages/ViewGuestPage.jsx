@@ -34,7 +34,7 @@ export function ViewGuestPage(props) {
     }, [])
 
     return (
-        <div className="container">
+        <div className="form-container">
             
             <TitleWithButtons
                 title={name}

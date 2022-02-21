@@ -15,7 +15,7 @@ $breakpoint-tablet: 768px;
 $breakpoint-phone: 500px;
 
 $phone-width: 250px;
-$desktop-width: 300px;
+$desktop-width: 400px;
 
 $phone-margin: 1rem;
 $desktop-margin: 4rem;
@@ -219,6 +219,23 @@ img {
 }
 
 footer {
+
+    .attribution {
+        font-size: 12px;
+        font-weight: 200;
+        margin: 0;
+        text-align: center;
+    }
+
+    div {
+        font-size: 12px;
+        font-weight: 200;
+        margin: 0 auto;
+        width: auto;
+        max-width: 200px;
+        text-align: center;
+        cursor: pointer;
+    }
 }
 
 .page-container {
@@ -341,13 +358,6 @@ footer {
     width: auto;
     height: auto;
     margin: 0 auto;
-}
-
-.attribution {
-    font-size: 12px;
-    font-weight: 200;
-    margin: 0;
-    text-align: center;
 }
 
 .stone-tree-image {
@@ -498,6 +508,7 @@ footer {
     display: block;
     position: relative;
     width: 100%;
+    margin-bottom: 36px;
 
     h2 {
         width: 100%;

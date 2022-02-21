@@ -90,7 +90,7 @@ export function EditGuestPage(props) {
     ];
 
     return (
-        <div className="container">
+        <div className="form-container">
             <TitleWithButtons
                 title={`${firstName} ${lastName}`}
                 leftButtons={[{label: '❮', onClick: () => handleClickChangePage('GUEST_LIST')}]}

@@ -172,7 +172,9 @@ const App = () => {
             <div className="page-content">
                 {currentPage}
             </div>
-            <Footer />
+            <Footer 
+                handleClickChangePage={handleClickChangePage}
+            />
         </div>
     )
 }

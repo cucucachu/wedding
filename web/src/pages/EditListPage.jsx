@@ -31,7 +31,7 @@ export function EditListPage(props) {
     const additionalGuests = currentGuests.filter(g => g.additionalGuestFor);
 
     // const [guests, setGuests] = useState(currentGuests && currentGuests.length ? currentGuests : [{...emptyGuest}]);
-    const [guests, setGuests] = useState(currentGuests && currentGuests.length ? primaryGuests : [{...emptyGuest}]);
+    const [guests, setGuests] = useState((currentGuests && currentGuests.length ? primaryGuests : [{...emptyGuest}]).sort((a,b) => a.name.localeCompare(b.name)));
     const [list, setList] = useState({...currentList});
     const [error, setError] = useState('');
 
