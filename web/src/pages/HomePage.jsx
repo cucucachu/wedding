@@ -8,6 +8,7 @@ export function HomePage(props) {
     return (
         <div className="container">
             <img className="couple-pic" src={tahoePic}/>
+            <button className="mobile-only" onClick={() => handleClickChangePage('GUEST_CODE')}>RSVP</button>
         </div>
     )
 }

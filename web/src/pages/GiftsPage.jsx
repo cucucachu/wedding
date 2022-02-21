@@ -4,6 +4,8 @@ export function GiftsPage() {
     return (
         <div className="container center-text">
             <h3>Gifts</h3>
+
+            <p>More info to come :)</p>
         </div>
     )
 }
