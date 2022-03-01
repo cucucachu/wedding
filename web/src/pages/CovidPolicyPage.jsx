@@ -13,8 +13,7 @@ export function CovidPolicyPage() {
                     </strong> event.
                 </p>
                 <p className="center-text">
-                    Cody has built a safe, secure place to upload pictures of your vaccine card here: 
-                    [link to be inserted]
+                    Cody has built a safe, secure place to upload pictures of your vaccine card when you RSVP.
                     All images of vaccine cards will be deleted after the event to protect your privacy. 
                     Please note that until a picture of a valid vaccine card is uploaded, 
                     your RSVP status will remain as "pending" even if you said you will attend.

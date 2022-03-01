@@ -3,9 +3,10 @@ import React from 'react';
 export function ProgramPage() {
     return (
         <div className="container center-text">
-            <h3>PLEASE ARRIVE BY 5:00 PM FOR THE CEREMONY, RECEPTION TO FOLLOW.</h3>
-            <br/>
-            <h3>PROGRAM TO BE UPDATED SOON, PLEASE CHECK BACK!</h3>
+            <strong>
+                <p className="center-text">Please arrive by 5:00 PM for the ceremony, reception to follow.</p>
+                <p className="center-text">Program to be updated soon, please check back!</p>
+            </strong>
         </div>
     )
 }
