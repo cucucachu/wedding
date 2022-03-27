@@ -5,7 +5,8 @@ export function GiftsPage() {
         <div className="container center-text">
             <h3>Gifts</h3>
 
-            <p>More info to come :)</p>
+            <p>You can find our wedding registry and honey fund by clicking below.</p>
+            <a href='https://www.zola.com/registry/zoelovescody' target="_blank">Our Wedding Registry</a>
         </div>
     )
 }
