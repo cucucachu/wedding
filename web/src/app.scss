@@ -537,6 +537,24 @@ footer {
     }
 }
 
+.schedule-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    max-width: 300px;
+    margin: auto;
+    margin-top: 24px;
+
+    div {
+        text-align: left;
+
+        p {
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
+    }
+}
+
 .mobile-only {
     display: none;
 }
